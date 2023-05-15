@@ -1,16 +1,7 @@
 #include <stdbool.h>
 #define SIZE_TAB 1024
 
-typedef struct {
-    char name[10]; // nom de la variable 
-    int addr;
-    bool tmp; // true si c'est une variable temporaire
-} symbole;
 
-typedef struct {
-    symbole tab_symboles[SIZE_TAB];
-    int nbr_symboles;
-} tab_symboles;
 
 
 void print_Tab();

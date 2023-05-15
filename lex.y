@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "pile.c"
+#include "tab_instru.c"
+#include "tab_manager.c"
+#include "Jump_manager.c"
 int yylex (void);
 void yyerror (const char *);
 #define STACKSIZE 200
@@ -72,35 +75,35 @@ Initialisationc :
     ;
 
 Initialisation :
-    tID  {decla_var_TI($1);} {push($<c>1,int_t,la_profondeur);} {printf("je suis là 1");}
-    | tID tASSIGN Val  {decla_var_TI($1); affect_TI ($3)}  { push($<c>1, int_t,la_profondeur); }
-    | Initialisation tCOMMA Initialisation  {printf("je suis là");}
+    tID  {decla_var_TI($<c>1);}
+    | tID tASSIGN Val  {decla_var_TI($<c>1); affect_TI ($<c>3); }
+    | Initialisation tCOMMA Initialisation  
     ;
 
 
 Affect :
-    tID tASSIGN Val   {affect_TI ($1)}
+    tID tASSIGN Val   { affect_TI ($1);}
     ;
 
 Val : 
-    tID {var_TI($1);} { push($<c>1, int_t,la_profondeur);}
-    | tNB  {nb_TI($1);}{ push("tmp", int_t,la_profondeur);}
-    | Val tADD Val {add_TI()} {struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2); printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("ADD  %%%d %%%d \n ",addr1, addr2);} 
-    | Val tMUL Val {mul_TI()}{struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2);printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3);  printf("MUL  %%%d %%%d \n ",addr1, addr2);}   
-    | Val tDIV Val {div_TI()} {struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2);printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3);  printf("DIV  %%%d %%%d \n ",addr1, addr2);}   
-    | Val tSUB Val {sub_TI()} {struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2);printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("SUB  %%%d %%%d \n ",addr1, addr2);}   
+    tID {var_TI($<c>1);}/* { push($<c>1, int_t,la_profondeur);}*/
+    | tNB  {nb_TI($1);}/*{ push("tmp", int_t,la_profondeur);}*/
+    | Val tADD Val  {add_TI();} {/*struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2); printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("ADD  %%%d %%%d \n ",addr1, add*/} 
+    | Val tMUL Val{mul_TI();} {/*struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2);printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3);  printf("MUL  %%%d %%%d \n ",addr1, add*/}   
+    | Val tDIV Val {div_TI();} {/*struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2);printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3);  printf("DIV  %%%d %%%d \n ",addr1, add*/}   
+    | Val tSUB Val {sub_TI();} {/*struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2);printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("SUB  %%%d %%%d \n ",addr1, add*/}   
     | tID tLPAR Parametre tRPAR  
     | tID tLPAR tRPAR   
     ;
 
 LVal :
     Val  
-    | LVal tEQ LVal  {  condi_eq_TI() ; } {struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2); printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("EQU  %%%d %%%d \n ",addr1, addr2);} 
-    | LVal tLT LVal  {  condi_lt_TI() ; } {struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2); printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("INF  %%%d %%%d \n ",addr1, addr2);} 
-    | LVal tGT LVal  {  condi_gt_TI() ; } {struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2); printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("SUP  %%%d %%%d \n ",addr1, addr2);} 
-    | LVal tNE LVal  {  condi_ne_TI() ; } {struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2); printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("NEQ  %%%d %%%d \n ",addr1, addr2);} 
-    | LVal tGE LVal  {  condi_ge_TI() ; } {struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2); printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("GE  %%%d %%%d \n ",addr1, addr2);} 
-    | LVal tLE LVal  {  condi_le_TI() ; } {struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2); printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("LE  %%%d %%%d \n ",addr1, addr2);} 
+    | LVal tEQ LVal  {  condi_eq_TI() ; } {/*struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2); printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("EQU  %%%d %%%d \n ",addr1, add*/} 
+    | LVal tLT LVal  {  condi_lt_TI() ; } {/*struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2); printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("INF  %%%d %%%d \n ",addr1, add*/} 
+    | LVal tGT LVal  {  condi_gt_TI() ; } {/*struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2); printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("SUP  %%%d %%%d \n ",addr1, add*/} 
+    | LVal tNE LVal  {  condi_ne_TI() ; } {/*struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2); printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("NEQ  %%%d %%%d \n ",addr1, add*/} 
+    | LVal tGE LVal  {  condi_ge_TI() ; } {/*struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2); printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("GE  %%%d %%%d \n ",addr1, add*/} 
+    | LVal tLE LVal  {  condi_le_TI() ; } {/*struct Element* tmp1=pop();struct Element* tmp2=pop();int  addr1=get_adress(tmp1); int addr2= get_adress(tmp2); printf("AFC %%%d %d \n", addr1, $<num>1);printf("AFC %%%d %d \n", addr2, $<num>3); printf("LE  %%%d %%%d \n ",addr1, add*/} 
 
     ;
 
@@ -117,14 +120,15 @@ If :   tIF tLPAR LVal tRPAR
         {
                 int condition = get_last_tmp_addr_Tab();
                 free_last_tmp_Tab();
-                int line = insert_TI("JMPF",condi,-1,-1);
+                int line = insert_TI("JMPF",condition,-1,-1);
                 insert_tjump(line);
         }
         BodyCond
         Else
         ;
 
-Else :  {
+Else :   %empty 
+        {
                 int current = get_nbr_instrus_TI();
                 actu_jump1(pop_tjump(), current+1);
         }
@@ -134,7 +138,7 @@ Else :  {
                 int current = get_nbr_instrus_TI();
                 actu_jump1(pop_tjump(), current+2);
                 int line = insert_TI("JMP",-1,-1,-1);
-                tjmp_insert(line);
+                insert_tjump(line);
         }
         BodyCond
         {
@@ -146,7 +150,7 @@ Else :  {
 
 While :tWHILE tLPAR LVal tRPAR
         {
-                $1 = get_nbr_instrus_TI()-2;
+                $<num>1 = get_nbr_instrus_TI()-2;
                 int condi = get_last_tmp_addr_Tab();
                 free_last_tmp_Tab();
                 int line = insert_TI("JMPF",condi,-1,-1);
@@ -156,16 +160,14 @@ While :tWHILE tLPAR LVal tRPAR
         {
                 int current = get_nbr_instrus_TI();
                 actu_jump1(pop_tjump(), current+2);
-                insert_TI("JMP",$1,-1,-1);
+                insert_TI("JMP",$<num>1,-1,-1);
         }
         
         ;
 
-Printf :  tPRINT tLPAR Val tRPAR tSEMI {print_TI($3);}  
+Printf :  tPRINT tLPAR Val tRPAR tSEMI {printf_TI($<c>1);}  
 BodyCond :    
-        tLBRACE Body tRBRACE     
-        |tLBRACE Body tRBRACE 
-        |tLBRACE Body tRBRACE
+        tLBRACE Body tRBRACE    
 
         ;
 

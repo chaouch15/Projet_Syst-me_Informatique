@@ -137,7 +137,7 @@ void afficherPile(){
 }
 
 
-
+/*
 int main(){
     printf("\nEtat de la pile :\n");
    
@@ -165,3 +165,4 @@ int main(){
     afficherPile(pile);
     return 0;
 }
+*/

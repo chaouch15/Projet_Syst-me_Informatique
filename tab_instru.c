@@ -15,13 +15,12 @@ table_instru get_Tab_instrus(){
     return TI;
 }
 
-int insert_TI_TI(char inst[4], int addr_dest, int addr1, int addr2){
+int insert_TI(char inst[4], int addr_dest, int addr1, int addr2){
     TI.nbr_instrus++;
     strcpy(TI.tab_instrus[TI.nbr_instrus].inst,inst);
     TI.tab_instrus[TI.nbr_instrus].addr_dest = addr_dest;
     TI.tab_instrus[TI.nbr_instrus].addr1 = addr1;
     TI.tab_instrus[TI.nbr_instrus].addr2 = addr2;
-
     return TI.nbr_instrus;
 }
 
@@ -69,7 +68,7 @@ void create_file_TI(){
     fclose(file);
 }
 
-void print_TI(char variable[4]){
+void printf_TI(char variable[4]){
     int addr = get_adresse_Tab(variable);
     insert_TI("PRI", addr, -1, -1);
 }
@@ -87,6 +86,7 @@ void sub_TI(){
     int addr = get_last_tmp_addr_Tab();
     int stl_addr = addr-1;
     free_last_tmp_Tab();
+   
     insert_TI("SUB", stl_addr, stl_addr, addr);
 }
 

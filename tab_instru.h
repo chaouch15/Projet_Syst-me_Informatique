@@ -24,7 +24,7 @@ void actu_jump1(int from, int to);
 void actu_jump(int from, int to);
 void print_TI();
 void create_file_TI();
-void print_TI();
+void printf_TI(char variable[4]);
 void add_TI();
 void sub_TI();
 void mul_TI();

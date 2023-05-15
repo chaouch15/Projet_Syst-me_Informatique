@@ -5,6 +5,17 @@
 #include <stdbool.h>
 #include "tab_manager.h"
 
+typedef struct {
+    char name[10]; // nom de la variable 
+    int addr;
+    bool tmp; // true si c'est une variable temporaire
+} symboles;
+
+typedef struct {
+    symboles tab_symboles[SIZE_TAB];
+    int nbr_symboles;
+} tab_symboles;
+
 tab_symboles Tab_Symb;
 
 void init_Tab(){
@@ -23,6 +34,7 @@ int insert_tmp_Tab(){
     strcpy(Tab_Symb.tab_symboles[Tab_Symb.nbr_symboles].name,"tmp_name");
     Tab_Symb.tab_symboles[Tab_Symb.nbr_symboles].tmp = true;
     Tab_Symb.tab_symboles[Tab_Symb.nbr_symboles].addr = Tab_Symb.nbr_symboles;
+ 
     return Tab_Symb.nbr_symboles;
 }
 
