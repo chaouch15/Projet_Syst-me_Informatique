@@ -5,11 +5,11 @@ all: lex
 %.o: %.c
 	gcc -c -Wall $< -o $@ 
 
-lex.tab.c lex.tab.h:	lex.y
+lex.tab.c lex.tab.h:	lex.y 
 	bison -t -v -d  $<
 	
 
-lex.yy.c: lex.l lex.tab.h
+lex.yy.c: lex.l lex.tab.h 
 	flex lex.l
 
 

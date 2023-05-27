@@ -16,7 +16,7 @@ extern int la_profondeur;
 
 %define parse.error verbose
 
-%token tIF tELSE tMain tWHILE tPRINT tRETURN tASSIGN tLBRACE tRBRACE tLPAR tRPAR tSEMI tCOMMA tCOMP tERROR tCONST TYPE PROFONDEUR ADDRESS tTID tADD tMUL tDIV tSUB tEQ tLT tGT tNE tGE tLE
+%token tIF tELSE tWHILE tPRINT tRETURN tASSIGN tLBRACE tRBRACE tLPAR tRPAR tSEMI tCOMMA tCOMP tERROR tCONST TYPE PROFONDEUR ADDRESS tTID tADD tMUL tDIV tSUB tEQ tLT tGT tNE tGE tLE
 
 %left tCOMMA
 %left tMUL
@@ -72,7 +72,7 @@ Declaration:
 ;
 Main : 
         tINT tMain tLPAR tRPAR tLBRACE Body Return tSEMI tRBRACE {insert_TI("RET",0,0,0);}
-    | tVOID  {printf("START MAIN");}tMain {push_main( la_profondeur);save_addr_main();} incr_prof tLPAR tRPAR tLBRACE Body tRBRACE {insert_TI("NOP",0,0,0);}
+    | tVOID  {printf("START MAIN");}tMain {start_main( la_profondeur);} incr_prof tLPAR tRPAR tLBRACE Body tRBRACE {insert_TI("NOP",0,0,0);}
     | tMain tLPAR tRPAR tLBRACE Body tRBRACE {insert_TI("NOP",0,0,0);}
     ;
 
@@ -88,9 +88,10 @@ Args :%empty
      ;
 
 Body :
-  %empty
-    | BodyDec Body
-    | BodyInstru  Body
+  %empty 
+       |  {printf("ddddd222gjkdfhcvn");}  BodyInstru  Body
+        |  {printf("11111");}  BodyDec Body
+
 ;
 /*
 Instru : 
@@ -98,8 +99,9 @@ Instru :
     | Affect tSEMI Instru     
 */
 BodyDec :
-      tINT Initialisation  tSEMI  
+      tINT Initialisation tSEMI  
     | tCONST Initialisationc tSEMI  
+
     ;
 
 BodyInstru :
@@ -107,7 +109,8 @@ BodyInstru :
     | Affect tSEMI             
     | incr_prof While  decr_prof
     | incr_prof  If   decr_prof
-    | Call tSEMI  
+  
+   
      ;
 
 
@@ -122,9 +125,10 @@ Initialisationc :
     ;
 
 Initialisation :
-       tID  {decla_var_TI($<c>1, la_profondeur);}
-    |   tID tASSIGN { decla_var_TI($<c>1, la_profondeur);} Val  {affect_TI ($1); }
+      tID   tASSIGN {save_addr_return() ;} Call    
+    | tID tASSIGN { decla_var_TI($<c>1, la_profondeur);} Val  {affect_TI ($1); }
     | Initialisation tCOMMA Initialisation  
+    |  tID  {decla_var_TI($<c>1, la_profondeur);} 
     ;
 
 Printf : tPRINT tLPAR Val tRPAR tSEMI {printf_TI($<c>3);}  
@@ -139,7 +143,7 @@ Val :
     | tID {var_TI($<c>1, la_profondeur);}/* { push($<c>1, int_t,la_profondeur);}*/
     | tNB {nb_TI($<num>1, la_profondeur);}/*{ push("tmp", int_t,la_profondeur);}*/
     |  Operation 
-    | Call {/*return_to_addr_main ();*/}
+   
     ;
 
 Operation : 
@@ -219,9 +223,9 @@ BodyCond :
 
         ;
 
-Parametre :
-    Val   {/*RST_arg();*/}
-    | Val tCOMMA Parametre 
+Parametre  :  
+         Val
+    |Val tCOMMA Parametre
     ;
 
 Return :
@@ -230,9 +234,8 @@ Return :
     ;
 
 
-
 Call:
-    tID tLPAR Parametre tRPAR {/*int line = insert_TI("JMP",get_first($<c>1),-1,-1);actu_jump(get_last($<c>1),line +1);*/ }
+    tID tLPAR  {insert_TI("CALL",search($<c>1),-1,-1); }Parametre tRPAR
     ;
 
  

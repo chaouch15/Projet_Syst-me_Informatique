@@ -228,12 +228,11 @@ void decla_var_TI(char variable[4] , int profondeur){
     
 }
 
+void start_main( int la_profondeur){
+    int addr = push_main( la_profondeur);
+    insert_TI("PUSH",addr, -1, -1);
+} 
 
-void PUSH(char variable[4] , int profondeur){
-   // insert_Tab(variable);
-   push(variable , profondeur);
-    
-}
 
 
 

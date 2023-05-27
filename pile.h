@@ -32,9 +32,9 @@ int push(char* nvid, int profondeur );
 //void afficherPile()
 Element* pop();
 int push_tmp(int profondeur) ;
-void save_addr_main ();
+void save_addr_return ();
 int push_main(int la_profondeur);
-void return_to_addr_main ();
+int get_addr_return ();
 
 
 

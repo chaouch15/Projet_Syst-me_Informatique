@@ -63,7 +63,7 @@ int search (char * id){
         }
     }
     if (!strcmp(aux->id ,id)){
-        return aux->addresse;
+        return (aux->addresse + 1);
 }
 return -1;
 }
@@ -113,7 +113,7 @@ void printElement (Element *actuel){
 }
 
 int push(char* nvid, int profondeur ){
-    printf(nvid);
+   
     struct Element *nouvelle_pile = malloc(sizeof(*nouvelle_pile));
     nouvelle_pile->id = nvid;
     nouvelle_pile -> tmp = false;
@@ -241,11 +241,15 @@ void afficherPile(){
     printf("\n");
 }
 
-void save_addr_main () {
+void save_addr_return () {
      printf("I am saving return addr");
     return_addr = addr; 
 
 }
+
+int get_addr_return() {
+    return return_addr;
+} 
 /*
 void return_to_addr_main (){
    printf("addr %d ::::::::::", return_addr); Element*  elmt = malloc(sizeof(*elmt));
