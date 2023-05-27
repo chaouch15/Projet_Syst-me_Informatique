@@ -51,38 +51,39 @@ extern int yydebug;
   {
     tIF = 258,
     tELSE = 259,
-    tWHILE = 260,
-    tPRINT = 261,
-    tRETURN = 262,
-    tINT = 263,
-    tVOID = 264,
-    tASSIGN = 265,
-    tLBRACE = 266,
-    tRBRACE = 267,
-    tLPAR = 268,
-    tRPAR = 269,
-    tSEMI = 270,
-    tCOMMA = 271,
-    tCOMP = 272,
-    tERROR = 273,
-    tCONST = 274,
-    TYPE = 275,
-    PROFONDEUR = 276,
-    ADDRESS = 277,
-    tTID = 278,
-    tADD = 279,
-    tMUL = 280,
-    tDIV = 281,
-    tSUB = 282,
-    tEQ = 283,
-    tLT = 284,
-    tGT = 285,
-    tNE = 286,
-    tGE = 287,
-    tLE = 288,
-    tOP = 289,
-    tNB = 290,
-    tID = 291
+    tMain = 260,
+    tWHILE = 261,
+    tPRINT = 262,
+    tRETURN = 263,
+    tASSIGN = 264,
+    tLBRACE = 265,
+    tRBRACE = 266,
+    tLPAR = 267,
+    tRPAR = 268,
+    tSEMI = 269,
+    tCOMMA = 270,
+    tCOMP = 271,
+    tERROR = 272,
+    tCONST = 273,
+    TYPE = 274,
+    PROFONDEUR = 275,
+    ADDRESS = 276,
+    tTID = 277,
+    tADD = 278,
+    tMUL = 279,
+    tDIV = 280,
+    tSUB = 281,
+    tEQ = 282,
+    tLT = 283,
+    tGT = 284,
+    tNE = 285,
+    tGE = 286,
+    tLE = 287,
+    tOP = 288,
+    tNB = 289,
+    tVOID = 290,
+    tINT = 291,
+    tID = 292
   };
 #endif
 
@@ -90,12 +91,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 21 "lex.y"
+#line 25 "lex.y"
 
     int num;
     char* c;
 
-#line 99 "lex.tab.h"
+#line 100 "lex.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

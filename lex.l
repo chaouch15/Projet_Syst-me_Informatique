@@ -23,10 +23,11 @@ ENDLINE      [ ]*\n
 "if"        { return tIF; }
 "else"      { return tELSE; }
 "while"     { return tWHILE; }
-"print"     { return tPRINT; }
+"printf"     { return tPRINT; }
 "return"    { return tRETURN; }
 "int"       { return tINT; }
 "const"     { return tCONST; }
+"main"     { return tMain;} 
 
 {WORDS}     { yylval.c= strdup(yytext); return tID; }
 {NUMBERS}   { yylval.num= atoi(yytext);return tNB;}
@@ -52,7 +53,6 @@ ENDLINE      [ ]*\n
 "*"         { return tMUL; }
 "/"         { return tDIV; }
 "-"         { return tSUB; }
-
 {ENDLINE}
 
 {COMMENT}

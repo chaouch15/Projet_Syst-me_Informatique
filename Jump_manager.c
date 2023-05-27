@@ -7,6 +7,7 @@
 table_jump Tab_JUMP;
 
 void init_tjump(){
+    printf("Jump Table INITIALISATION \n");
     Tab_JUMP.nb_jump = -1;
 }
 
