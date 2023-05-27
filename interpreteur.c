@@ -64,25 +64,26 @@ void interpreteuree(){
     while(TI_code[index_code][0] != 0){
         switch (TI_code[index_code][0]) {
            case 1:
-                TI_reg[1] = TI_code[index_code][2] + TI_code[index_code][3]   ;
+                TI_reg[TI_code[index_code][1]] = TI_code[index_code][2] + TI_code[index_code][3]   ;
                break;
            case 2:
-              TI_reg[1] = TI_code[index_code][2] * TI_code[index_code][3] ;
+              TI_reg[TI_code[index_code][1]] = TI_code[index_code][2] * TI_code[index_code][3] ;
+
                break;
            case 3:
-              TI_reg[1] = TI_code[index_code][2] - TI_code[index_code][3] ;
+              TI_reg[TI_code[index_code][1]] = TI_code[index_code][2] - TI_code[index_code][3] ;
                break;
            case 4:
-               TI_reg[1] = TI_code[index_code][2] / TI_code[index_code][3] ;
+               TI_reg[TI_code[index_code][1]] = TI_code[index_code][2] / TI_code[index_code][3] ;
                break;
            case 5:
-               TI_reg[1] = TI_code[index_code][2]  ;
+               TI_reg[TI_code[index_code][1]] = TI_code[index_code][2]  ;
                break;
            case 6:
-                TI_reg[1] = TI_code[index_code][2]  ;
+                TI_reg[TI_code[index_code][1]] = TI_code[index_code][2]  ;
                break;
            case 7:
-           index_code =  TI_reg[1]  ;
+           index_code =  TI_reg[TI_code[index_code][1]]  ;
                break;
            case 8:
                if(TI_code[index_code][0]){
@@ -90,15 +91,15 @@ void interpreteuree(){
                break;
            case 9:
            if(TI_code[index_code][2] <TI_code[index_code][3]  ){
-                TI_reg[1] = 1 ;} else{TI_reg[1] =0;} 
+                TI_reg[TI_code[index_code][1]] = 1 ;} else{TI_reg[TI_code[index_code][1]] =0;} 
              break;
            case 10:
             if(TI_code[index_code][2] >TI_code[index_code][3]  ){
-                TI_reg[1] = 1 ;} else{TI_reg[1] =0;} 
+                TI_reg[TI_code[index_code][1]] = 1 ;} else{TI_reg[TI_code[index_code][1]] =0;} 
              break;
            case 11:
             if(TI_code[index_code][2] == TI_code[index_code][3]  ){
-                TI_reg[1] = 1 ;} else{TI_reg[1] =0;} 
+                TI_reg[TI_code[index_code][1]] = 1 ;} else{TI_reg[TI_code[index_code][1]] =0;} 
              break;
            case 12:
                 printf("%d\n",TI_reg[TI_code[index_code][1]]) ;

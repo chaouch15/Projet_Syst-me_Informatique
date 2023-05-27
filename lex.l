@@ -29,10 +29,6 @@ ENDLINE      [ ]*\n
 "const"     { return tCONST; }
 "main"     { return tMain;} 
 
-{WORDS}     { yylval.c= strdup(yytext); return tID; }
-{NUMBERS}   { yylval.num= atoi(yytext);return tNB;}
-
-
 "("         { return tLPAR; }
 ")"         { return tRPAR; }
 "{"         { return tLBRACE; }
@@ -56,6 +52,10 @@ ENDLINE      [ ]*\n
 {ENDLINE}
 
 {COMMENT}
+{WORDS}     { yylval.c= strdup(yytext); return tID; }
+{NUMBERS}   { yylval.num= atoi(yytext);return tNB;}
+
+
 .           { return tERROR ; }
 
 %%

@@ -6,10 +6,12 @@ Terminaux inutilisés dans la grammaire
     PROFONDEUR
     ADDRESS
     tTID
-    tOP
 
 
-État 115 conflits: 4 décalage/réduction
+État 111 conflits: 4 décalage/réduction
+État 112 conflits: 4 décalage/réduction
+État 113 conflits: 4 décalage/réduction
+État 114 conflits: 4 décalage/réduction
 
 
 Grammaire
@@ -19,301 +21,327 @@ Grammaire
     1 Program: Statement
 
     2 Statement: Statement Main
-    3          | Main
-    4          | Statement Fonction
-    5          | Fonction
+    3          | Fonction
+    4          | Main
+    5          | Statement Fonction
 
-    6 Fonction: tINT tID Declaration tLBRACE Body Return tSEMI tRBRACE
-    7         | tVOID tID Declaration tLBRACE Body tRBRACE
+    6 $@1: %empty
 
-    8 Declaration: tLPAR Args tRPAR
+    7 $@2: %empty
 
-    9 Main: tINT tMain tLPAR tRPAR tLBRACE Body Return tSEMI tRBRACE
-   10     | tVOID tMain tLPAR tRPAR tLBRACE Body tRBRACE
-   11     | tMain tLPAR tRPAR tLBRACE Body tRBRACE
+    8 Fonction: tINT tID incr_prof $@1 Declaration tLBRACE Body Return $@2 tSEMI tRBRACE
 
-   12 Args: %empty
-   13     | tINT tID
+    9 $@3: %empty
 
-   14 $@1: %empty
+   10 Fonction: tVOID tID $@3 Declaration tLBRACE Body tRBRACE
 
-   15 Args: tINT tID tCOMMA $@1 Args
+   11 Declaration: tLPAR Args tRPAR
 
-   16 Body: %empty
-   17     | BodyDec Body
-   18     | BodyInstru Body
+   12 Main: tINT tMain tLPAR tRPAR tLBRACE Body Return tSEMI tRBRACE
 
-   19 BodyDec: tINT Initialisation tSEMI
-   20        | tCONST Initialisationc tSEMI
+   13 $@4: %empty
 
-   21 BodyInstru: Printf BodyInstru
-   22           | Affect tSEMI
-   23           | incr_prof While decr_prof
-   24           | incr_prof If decr_prof
-   25           | Call tSEMI
+   14 $@5: %empty
 
-   26 incr_prof: %empty
+   15 Main: tVOID $@4 tMain $@5 incr_prof tLPAR tRPAR tLBRACE Body tRBRACE
+   16     | tMain tLPAR tRPAR tLBRACE Body tRBRACE
 
-   27 decr_prof: %empty
+   17 Args: %empty
+   18     | tINT tID
 
-   28 Initialisationc: tID
-   29                | Affect
+   19 $@6: %empty
 
-   30 Initialisation: tID
+   20 Args: tINT tID tCOMMA $@6 Args
 
-   31 $@2: %empty
+   21 Body: %empty
+   22     | BodyDec Body
+   23     | BodyInstru Body
 
-   32 Initialisation: tID tASSIGN $@2 Val
-   33               | Initialisation tCOMMA Initialisation
+   24 BodyDec: tINT Initialisation tSEMI
+   25        | tCONST Initialisationc tSEMI
 
-   34 Printf: tPRINT tLPAR Val tRPAR tSEMI
+   26 BodyInstru: Printf BodyInstru
+   27           | Affect tSEMI
+   28           | incr_prof While decr_prof
+   29           | incr_prof If decr_prof
+   30           | Call tSEMI
 
-   35 Affect: tID tASSIGN Val
+   31 incr_prof: %empty
 
-   36 Val: %empty
-   37    | tID
-   38    | tNB
-   39    | Val Operation Val
-   40    | Call
+   32 decr_prof: %empty
 
-   41 $@3: %empty
+   33 Initialisationc: tID
+   34                | Affect
 
-   42 Operation: tADD $@3
+   35 Initialisation: tID
 
-   43 $@4: %empty
+   36 $@7: %empty
 
-   44 Operation: tMUL $@4
+   37 Initialisation: tID tASSIGN $@7 Val
+   38               | Initialisation tCOMMA Initialisation
 
-   45 $@5: %empty
+   39 Printf: tPRINT tLPAR Val tRPAR tSEMI
 
-   46 Operation: tDIV $@5
+   40 Affect: tID tASSIGN Val
 
-   47 $@6: %empty
+   41 Val: %empty
+   42    | tID
+   43    | tNB
+   44    | Operation
+   45    | Call
 
-   48 Operation: tSUB $@6
+   46 $@8: %empty
 
-   49 LVal: Val
-   50     | tLPAR Val tRPAR
+   47 Operation: Val tADD Val $@8
 
-   51 Logic: LVal
+   48 $@9: %empty
 
-   52 $@7: %empty
+   49 Operation: Val tMUL Val $@9
 
-   53 Logic: LVal tEQ LVal $@7
+   50 $@10: %empty
 
-   54 $@8: %empty
+   51 Operation: Val tDIV Val $@10
 
-   55 Logic: LVal tLT LVal $@8
+   52 $@11: %empty
 
-   56 $@9: %empty
+   53 Operation: Val tSUB Val $@11
 
-   57 Logic: LVal tGT LVal $@9
+   54 LVal: Val
+   55     | tLPAR Val tRPAR
 
-   58 $@10: %empty
+   56 Logic: LVal
 
-   59 Logic: LVal tNE LVal $@10
+   57 $@12: %empty
 
-   60 $@11: %empty
+   58 Logic: LVal tEQ LVal $@12
 
-   61 Logic: LVal tGE LVal $@11
+   59 $@13: %empty
 
-   62 $@12: %empty
+   60 Logic: LVal tLT LVal $@13
 
-   63 Logic: LVal tLE LVal $@12
+   61 $@14: %empty
 
-   64 $@13: %empty
+   62 Logic: LVal tGT LVal $@14
 
-   65 If: tIF tLPAR Logic tRPAR $@13 BodyCond Else
+   63 $@15: %empty
 
-   66 Else: %empty
+   64 Logic: LVal tNE LVal $@15
 
-   67 $@14: %empty
+   65 $@16: %empty
 
-   68 Else: tELSE $@14 BodyCond
+   66 Logic: LVal tGE LVal $@16
 
-   69 $@15: %empty
+   67 $@17: %empty
 
-   70 While: tWHILE tLPAR LVal tRPAR $@15 BodyCond
+   68 Logic: LVal tLE LVal $@17
 
-   71 BodyCond: tLBRACE Body tRBRACE
+   69 $@18: %empty
 
-   72 Parametre: Val
-   73          | Val tCOMMA Parametre
+   70 If: tIF tLPAR Logic tRPAR $@18 BodyCond Else
 
-   74 Return: tRETURN tLPAR Val tRPAR
-   75       | tRETURN Val
+   71 Else: %empty
 
-   76 Call: tID tLPAR Parametre tRPAR
+   72 $@19: %empty
+
+   73 Else: tELSE $@19 BodyCond
+
+   74 $@20: %empty
+
+   75 While: tWHILE tLPAR LVal tRPAR $@20 BodyCond
+
+   76 BodyCond: tLBRACE Body tRBRACE
+
+   77 Parametre: Val
+   78          | Val tCOMMA Parametre
+
+   79 Return: tRETURN tLPAR Val tRPAR
+   80       | tRETURN Val
+
+   81 Call: tID tLPAR Parametre tRPAR
 
 
 Terminaux, suivis des règles où ils apparaissent
 
     $end (0) 0
     error (256)
-    tIF (258) 65
-    tELSE (259) 68
-    tMain (260) 9 10 11
-    tWHILE (261) 70
-    tPRINT (262) 34
-    tRETURN (263) 74 75
-    tASSIGN (264) 32 35
-    tLBRACE (265) 6 7 9 10 11 71
-    tRBRACE (266) 6 7 9 10 11 71
-    tLPAR (267) 8 9 10 11 34 50 65 70 74 76
-    tRPAR (268) 8 9 10 11 34 50 65 70 74 76
-    tSEMI (269) 6 9 19 20 22 25 34
-    tCOMMA (270) 15 33 73
+    tIF (258) 70
+    tELSE (259) 73
+    tMain <c> (260) 12 15 16
+    tWHILE (261) 75
+    tPRINT (262) 39
+    tRETURN (263) 79 80
+    tASSIGN (264) 37 40
+    tLBRACE (265) 8 10 12 15 16 76
+    tRBRACE (266) 8 10 12 15 16 76
+    tLPAR (267) 11 12 15 16 39 55 70 75 79 81
+    tRPAR (268) 11 12 15 16 39 55 70 75 79 81
+    tSEMI (269) 8 12 24 25 27 30 39
+    tCOMMA (270) 20 38 78
     tCOMP (271)
     tERROR (272)
-    tCONST (273) 20
+    tCONST (273) 25
     TYPE (274)
     PROFONDEUR (275)
     ADDRESS (276)
     tTID (277)
-    tADD (278) 42
-    tMUL (279) 44
-    tDIV (280) 46
-    tSUB (281) 48
-    tEQ (282) 53
-    tLT (283) 55
-    tGT (284) 57
-    tNE (285) 59
-    tGE (286) 61
-    tLE (287) 63
-    tOP (288)
-    tNB <num> (289) 38
-    tVOID <num> (290) 7 10
-    tINT <num> (291) 6 9 13 15 19
-    tID <c> (292) 6 7 13 15 28 30 32 35 37 76
+    tADD (278) 47
+    tMUL (279) 49
+    tDIV (280) 51
+    tSUB (281) 53
+    tEQ (282) 58
+    tLT (283) 60
+    tGT (284) 62
+    tNE (285) 64
+    tGE (286) 66
+    tLE (287) 68
+    tNB <num> (288) 43
+    tVOID <num> (289) 10 15
+    tINT <num> (290) 8 12 18 20 24
+    tID <c> (291) 8 10 18 20 33 35 37 40 42 81
 
 
 Non-terminaux, suivis des règles où ils apparaissent
 
-    $accept (38)
+    $accept (37)
         à gauche: 0
-    Program (39)
+    Program (38)
         à gauche: 1
         à droite: 0
-    Statement (40)
+    Statement (39)
         à gauche: 2 3 4 5
-        à droite: 1 2 4
-    Fonction (41)
-        à gauche: 6 7
-        à droite: 4 5
-    Declaration (42)
-        à gauche: 8
-        à droite: 6 7
-    Main (43)
-        à gauche: 9 10 11
-        à droite: 2 3
-    Args (44)
-        à gauche: 12 13 15
-        à droite: 8 15
-    $@1 (45)
+        à droite: 1 2 5
+    Fonction (40)
+        à gauche: 8 10
+        à droite: 3 5
+    $@1 (41)
+        à gauche: 6
+        à droite: 8
+    $@2 (42)
+        à gauche: 7
+        à droite: 8
+    $@3 (43)
+        à gauche: 9
+        à droite: 10
+    Declaration (44)
+        à gauche: 11
+        à droite: 8 10
+    Main (45)
+        à gauche: 12 15 16
+        à droite: 2 4
+    $@4 (46)
+        à gauche: 13
+        à droite: 15
+    $@5 (47)
         à gauche: 14
         à droite: 15
-    Body (46)
-        à gauche: 16 17 18
-        à droite: 6 7 9 10 11 17 18 71
-    BodyDec (47)
-        à gauche: 19 20
-        à droite: 17
-    BodyInstru (48)
-        à gauche: 21 22 23 24 25
-        à droite: 18 21
-    incr_prof (49)
-        à gauche: 26
-        à droite: 23 24
-    decr_prof (50)
-        à gauche: 27
-        à droite: 23 24
-    Initialisationc (51)
-        à gauche: 28 29
+    Args (48)
+        à gauche: 17 18 20
+        à droite: 11 20
+    $@6 (49)
+        à gauche: 19
         à droite: 20
-    Initialisation (52)
-        à gauche: 30 32 33
-        à droite: 19 33
-    $@2 (53)
+    Body (50)
+        à gauche: 21 22 23
+        à droite: 8 10 12 15 16 22 23 76
+    BodyDec (51)
+        à gauche: 24 25
+        à droite: 22
+    BodyInstru (52)
+        à gauche: 26 27 28 29 30
+        à droite: 23 26
+    incr_prof (53)
         à gauche: 31
-        à droite: 32
-    Printf (54)
-        à gauche: 34
-        à droite: 21
-    Affect (55)
-        à gauche: 35
-        à droite: 22 29
-    Val (56)
-        à gauche: 36 37 38 39 40
-        à droite: 32 34 35 39 49 50 72 73 74 75
-    Operation (57)
-        à gauche: 42 44 46 48
-        à droite: 39
-    $@3 (58)
-        à gauche: 41
-        à droite: 42
-    $@4 (59)
-        à gauche: 43
+        à droite: 8 15 28 29
+    decr_prof (54)
+        à gauche: 32
+        à droite: 28 29
+    Initialisationc (55)
+        à gauche: 33 34
+        à droite: 25
+    Initialisation (56)
+        à gauche: 35 37 38
+        à droite: 24 38
+    $@7 (57)
+        à gauche: 36
+        à droite: 37
+    Printf (58)
+        à gauche: 39
+        à droite: 26
+    Affect (59)
+        à gauche: 40
+        à droite: 27 34
+    Val (60)
+        à gauche: 41 42 43 44 45
+        à droite: 37 39 40 47 49 51 53 54 55 77 78 79 80
+    Operation (61)
+        à gauche: 47 49 51 53
         à droite: 44
-    $@5 (60)
-        à gauche: 45
-        à droite: 46
-    $@6 (61)
-        à gauche: 47
-        à droite: 48
-    LVal (62)
-        à gauche: 49 50
-        à droite: 51 53 55 57 59 61 63 70
-    Logic (63)
-        à gauche: 51 53 55 57 59 61 63
-        à droite: 65
-    $@7 (64)
+    $@8 (62)
+        à gauche: 46
+        à droite: 47
+    $@9 (63)
+        à gauche: 48
+        à droite: 49
+    $@10 (64)
+        à gauche: 50
+        à droite: 51
+    $@11 (65)
         à gauche: 52
         à droite: 53
-    $@8 (65)
-        à gauche: 54
-        à droite: 55
-    $@9 (66)
-        à gauche: 56
-        à droite: 57
-    $@10 (67)
-        à gauche: 58
-        à droite: 59
-    $@11 (68)
-        à gauche: 60
-        à droite: 61
-    $@12 (69)
-        à gauche: 62
-        à droite: 63
-    If (70)
+    LVal (66)
+        à gauche: 54 55
+        à droite: 56 58 60 62 64 66 68 75
+    Logic (67)
+        à gauche: 56 58 60 62 64 66 68
+        à droite: 70
+    $@12 (68)
+        à gauche: 57
+        à droite: 58
+    $@13 (69)
+        à gauche: 59
+        à droite: 60
+    $@14 (70)
+        à gauche: 61
+        à droite: 62
+    $@15 (71)
+        à gauche: 63
+        à droite: 64
+    $@16 (72)
         à gauche: 65
-        à droite: 24
-    $@13 (71)
-        à gauche: 64
-        à droite: 65
-    Else (72)
-        à gauche: 66 68
-        à droite: 65
-    $@14 (73)
+        à droite: 66
+    $@17 (73)
         à gauche: 67
         à droite: 68
-    While (74)
+    If (74)
         à gauche: 70
-        à droite: 23
-    $@15 (75)
+        à droite: 29
+    $@18 (75)
         à gauche: 69
         à droite: 70
-    BodyCond (76)
-        à gauche: 71
-        à droite: 65 68 70
-    Parametre (77)
-        à gauche: 72 73
-        à droite: 73 76
-    Return (78)
-        à gauche: 74 75
-        à droite: 6 9
-    Call (79)
+    Else (76)
+        à gauche: 71 73
+        à droite: 70
+    $@19 (77)
+        à gauche: 72
+        à droite: 73
+    While (78)
+        à gauche: 75
+        à droite: 28
+    $@20 (79)
+        à gauche: 74
+        à droite: 75
+    BodyCond (80)
         à gauche: 76
-        à droite: 25 40
+        à droite: 70 73 75
+    Parametre (81)
+        à gauche: 77 78
+        à droite: 78 81
+    Return (82)
+        à gauche: 79 80
+        à droite: 8 12
+    Call (83)
+        à gauche: 81
+        à droite: 30 45
 
 
 État 0
@@ -332,24 +360,27 @@ Non-terminaux, suivis des règles où ils apparaissent
 
 État 1
 
-   11 Main: tMain . tLPAR tRPAR tLBRACE Body tRBRACE
+   16 Main: tMain . tLPAR tRPAR tLBRACE Body tRBRACE
 
     tLPAR  décalage et aller à l'état 8
 
 
 État 2
 
-    7 Fonction: tVOID . tID Declaration tLBRACE Body tRBRACE
-   10 Main: tVOID . tMain tLPAR tRPAR tLBRACE Body tRBRACE
+   10 Fonction: tVOID . tID $@3 Declaration tLBRACE Body tRBRACE
+   15 Main: tVOID . $@4 tMain $@5 incr_prof tLPAR tRPAR tLBRACE Body tRBRACE
 
-    tMain  décalage et aller à l'état 9
-    tID    décalage et aller à l'état 10
+    tID  décalage et aller à l'état 9
+
+    $défaut  réduction par utilisation de la règle 13 ($@4)
+
+    $@4  aller à l'état 10
 
 
 État 3
 
-    6 Fonction: tINT . tID Declaration tLBRACE Body Return tSEMI tRBRACE
-    9 Main: tINT . tMain tLPAR tRPAR tLBRACE Body Return tSEMI tRBRACE
+    8 Fonction: tINT . tID incr_prof $@1 Declaration tLBRACE Body Return $@2 tSEMI tRBRACE
+   12 Main: tINT . tMain tLPAR tRPAR tLBRACE Body Return tSEMI tRBRACE
 
     tMain  décalage et aller à l'état 11
     tID    décalage et aller à l'état 12
@@ -366,7 +397,7 @@ Non-terminaux, suivis des règles où ils apparaissent
 
     1 Program: Statement .
     2 Statement: Statement . Main
-    4          | Statement . Fonction
+    5          | Statement . Fonction
 
     tMain  décalage et aller à l'état 1
     tVOID  décalage et aller à l'état 2
@@ -380,55 +411,55 @@ Non-terminaux, suivis des règles où ils apparaissent
 
 État 6
 
-    5 Statement: Fonction .
-
-    $défaut  réduction par utilisation de la règle 5 (Statement)
-
-
-État 7
-
-    3 Statement: Main .
+    3 Statement: Fonction .
 
     $défaut  réduction par utilisation de la règle 3 (Statement)
 
 
+État 7
+
+    4 Statement: Main .
+
+    $défaut  réduction par utilisation de la règle 4 (Statement)
+
+
 État 8
 
-   11 Main: tMain tLPAR . tRPAR tLBRACE Body tRBRACE
+   16 Main: tMain tLPAR . tRPAR tLBRACE Body tRBRACE
 
     tRPAR  décalage et aller à l'état 16
 
 
 État 9
 
-   10 Main: tVOID tMain . tLPAR tRPAR tLBRACE Body tRBRACE
+   10 Fonction: tVOID tID . $@3 Declaration tLBRACE Body tRBRACE
 
-    tLPAR  décalage et aller à l'état 17
+    $défaut  réduction par utilisation de la règle 9 ($@3)
+
+    $@3  aller à l'état 17
 
 
 État 10
 
-    7 Fonction: tVOID tID . Declaration tLBRACE Body tRBRACE
+   15 Main: tVOID $@4 . tMain $@5 incr_prof tLPAR tRPAR tLBRACE Body tRBRACE
 
-    tLPAR  décalage et aller à l'état 18
-
-    Declaration  aller à l'état 19
+    tMain  décalage et aller à l'état 18
 
 
 État 11
 
-    9 Main: tINT tMain . tLPAR tRPAR tLBRACE Body Return tSEMI tRBRACE
+   12 Main: tINT tMain . tLPAR tRPAR tLBRACE Body Return tSEMI tRBRACE
 
-    tLPAR  décalage et aller à l'état 20
+    tLPAR  décalage et aller à l'état 19
 
 
 État 12
 
-    6 Fonction: tINT tID . Declaration tLBRACE Body Return tSEMI tRBRACE
+    8 Fonction: tINT tID . incr_prof $@1 Declaration tLBRACE Body Return $@2 tSEMI tRBRACE
 
-    tLPAR  décalage et aller à l'état 18
+    $défaut  réduction par utilisation de la règle 31 (incr_prof)
 
-    Declaration  aller à l'état 21
+    incr_prof  aller à l'état 20
 
 
 État 13
@@ -440,9 +471,9 @@ Non-terminaux, suivis des règles où ils apparaissent
 
 État 14
 
-    4 Statement: Statement Fonction .
+    5 Statement: Statement Fonction .
 
-    $défaut  réduction par utilisation de la règle 4 (Statement)
+    $défaut  réduction par utilisation de la règle 5 (Statement)
 
 
 État 15
@@ -454,1378 +485,1546 @@ Non-terminaux, suivis des règles où ils apparaissent
 
 État 16
 
-   11 Main: tMain tLPAR tRPAR . tLBRACE Body tRBRACE
+   16 Main: tMain tLPAR tRPAR . tLBRACE Body tRBRACE
 
-    tLBRACE  décalage et aller à l'état 22
+    tLBRACE  décalage et aller à l'état 21
 
 
 État 17
 
-   10 Main: tVOID tMain tLPAR . tRPAR tLBRACE Body tRBRACE
+   10 Fonction: tVOID tID $@3 . Declaration tLBRACE Body tRBRACE
 
-    tRPAR  décalage et aller à l'état 23
+    tLPAR  décalage et aller à l'état 22
+
+    Declaration  aller à l'état 23
 
 
 État 18
 
-    8 Declaration: tLPAR . Args tRPAR
+   15 Main: tVOID $@4 tMain . $@5 incr_prof tLPAR tRPAR tLBRACE Body tRBRACE
 
-    tINT  décalage et aller à l'état 24
+    $défaut  réduction par utilisation de la règle 14 ($@5)
 
-    $défaut  réduction par utilisation de la règle 12 (Args)
-
-    Args  aller à l'état 25
+    $@5  aller à l'état 24
 
 
 État 19
 
-    7 Fonction: tVOID tID Declaration . tLBRACE Body tRBRACE
+   12 Main: tINT tMain tLPAR . tRPAR tLBRACE Body Return tSEMI tRBRACE
 
-    tLBRACE  décalage et aller à l'état 26
+    tRPAR  décalage et aller à l'état 25
 
 
 État 20
 
-    9 Main: tINT tMain tLPAR . tRPAR tLBRACE Body Return tSEMI tRBRACE
+    8 Fonction: tINT tID incr_prof . $@1 Declaration tLBRACE Body Return $@2 tSEMI tRBRACE
 
-    tRPAR  décalage et aller à l'état 27
+    $défaut  réduction par utilisation de la règle 6 ($@1)
+
+    $@1  aller à l'état 26
 
 
 État 21
 
-    6 Fonction: tINT tID Declaration . tLBRACE Body Return tSEMI tRBRACE
+   16 Main: tMain tLPAR tRPAR tLBRACE . Body tRBRACE
 
-    tLBRACE  décalage et aller à l'état 28
+    tPRINT  décalage et aller à l'état 27
+    tCONST  décalage et aller à l'état 28
+    tINT    décalage et aller à l'état 29
+    tID     décalage et aller à l'état 30
+
+    tRBRACE   réduction par utilisation de la règle 21 (Body)
+    $défaut  réduction par utilisation de la règle 31 (incr_prof)
+
+    Body        aller à l'état 31
+    BodyDec     aller à l'état 32
+    BodyInstru  aller à l'état 33
+    incr_prof   aller à l'état 34
+    Printf      aller à l'état 35
+    Affect      aller à l'état 36
+    Call        aller à l'état 37
 
 
 État 22
 
-   11 Main: tMain tLPAR tRPAR tLBRACE . Body tRBRACE
+   11 Declaration: tLPAR . Args tRPAR
 
-    tPRINT  décalage et aller à l'état 29
-    tCONST  décalage et aller à l'état 30
-    tINT    décalage et aller à l'état 31
-    tID     décalage et aller à l'état 32
+    tINT  décalage et aller à l'état 38
 
-    tRBRACE   réduction par utilisation de la règle 16 (Body)
-    $défaut  réduction par utilisation de la règle 26 (incr_prof)
+    $défaut  réduction par utilisation de la règle 17 (Args)
 
-    Body        aller à l'état 33
-    BodyDec     aller à l'état 34
-    BodyInstru  aller à l'état 35
-    incr_prof   aller à l'état 36
-    Printf      aller à l'état 37
-    Affect      aller à l'état 38
-    Call        aller à l'état 39
+    Args  aller à l'état 39
 
 
 État 23
 
-   10 Main: tVOID tMain tLPAR tRPAR . tLBRACE Body tRBRACE
+   10 Fonction: tVOID tID $@3 Declaration . tLBRACE Body tRBRACE
 
     tLBRACE  décalage et aller à l'état 40
 
 
 État 24
 
-   13 Args: tINT . tID
-   15     | tINT . tID tCOMMA $@1 Args
+   15 Main: tVOID $@4 tMain $@5 . incr_prof tLPAR tRPAR tLBRACE Body tRBRACE
 
-    tID  décalage et aller à l'état 41
+    $défaut  réduction par utilisation de la règle 31 (incr_prof)
+
+    incr_prof  aller à l'état 41
 
 
 État 25
 
-    8 Declaration: tLPAR Args . tRPAR
+   12 Main: tINT tMain tLPAR tRPAR . tLBRACE Body Return tSEMI tRBRACE
 
-    tRPAR  décalage et aller à l'état 42
+    tLBRACE  décalage et aller à l'état 42
 
 
 État 26
 
-    7 Fonction: tVOID tID Declaration tLBRACE . Body tRBRACE
+    8 Fonction: tINT tID incr_prof $@1 . Declaration tLBRACE Body Return $@2 tSEMI tRBRACE
 
-    tPRINT  décalage et aller à l'état 29
-    tCONST  décalage et aller à l'état 30
-    tINT    décalage et aller à l'état 31
-    tID     décalage et aller à l'état 32
+    tLPAR  décalage et aller à l'état 22
 
-    tRBRACE   réduction par utilisation de la règle 16 (Body)
-    $défaut  réduction par utilisation de la règle 26 (incr_prof)
-
-    Body        aller à l'état 43
-    BodyDec     aller à l'état 34
-    BodyInstru  aller à l'état 35
-    incr_prof   aller à l'état 36
-    Printf      aller à l'état 37
-    Affect      aller à l'état 38
-    Call        aller à l'état 39
+    Declaration  aller à l'état 43
 
 
 État 27
 
-    9 Main: tINT tMain tLPAR tRPAR . tLBRACE Body Return tSEMI tRBRACE
+   39 Printf: tPRINT . tLPAR Val tRPAR tSEMI
 
-    tLBRACE  décalage et aller à l'état 44
+    tLPAR  décalage et aller à l'état 44
 
 
 État 28
 
-    6 Fonction: tINT tID Declaration tLBRACE . Body Return tSEMI tRBRACE
+   25 BodyDec: tCONST . Initialisationc tSEMI
 
-    tPRINT  décalage et aller à l'état 29
-    tCONST  décalage et aller à l'état 30
-    tINT    décalage et aller à l'état 31
-    tID     décalage et aller à l'état 32
+    tID  décalage et aller à l'état 45
 
-    tRETURN   réduction par utilisation de la règle 16 (Body)
-    $défaut  réduction par utilisation de la règle 26 (incr_prof)
-
-    Body        aller à l'état 45
-    BodyDec     aller à l'état 34
-    BodyInstru  aller à l'état 35
-    incr_prof   aller à l'état 36
-    Printf      aller à l'état 37
-    Affect      aller à l'état 38
-    Call        aller à l'état 39
+    Initialisationc  aller à l'état 46
+    Affect           aller à l'état 47
 
 
 État 29
 
-   34 Printf: tPRINT . tLPAR Val tRPAR tSEMI
+   24 BodyDec: tINT . Initialisation tSEMI
 
-    tLPAR  décalage et aller à l'état 46
+    tID  décalage et aller à l'état 48
+
+    Initialisation  aller à l'état 49
 
 
 État 30
 
-   20 BodyDec: tCONST . Initialisationc tSEMI
+   40 Affect: tID . tASSIGN Val
+   81 Call: tID . tLPAR Parametre tRPAR
 
-    tID  décalage et aller à l'état 47
-
-    Initialisationc  aller à l'état 48
-    Affect           aller à l'état 49
+    tASSIGN  décalage et aller à l'état 50
+    tLPAR    décalage et aller à l'état 51
 
 
 État 31
 
-   19 BodyDec: tINT . Initialisation tSEMI
+   16 Main: tMain tLPAR tRPAR tLBRACE Body . tRBRACE
 
-    tID  décalage et aller à l'état 50
-
-    Initialisation  aller à l'état 51
+    tRBRACE  décalage et aller à l'état 52
 
 
 État 32
 
-   35 Affect: tID . tASSIGN Val
-   76 Call: tID . tLPAR Parametre tRPAR
+   22 Body: BodyDec . Body
 
-    tASSIGN  décalage et aller à l'état 52
-    tLPAR    décalage et aller à l'état 53
+    tPRINT  décalage et aller à l'état 27
+    tCONST  décalage et aller à l'état 28
+    tINT    décalage et aller à l'état 29
+    tID     décalage et aller à l'état 30
+
+    tIF       réduction par utilisation de la règle 31 (incr_prof)
+    tWHILE    réduction par utilisation de la règle 31 (incr_prof)
+    $défaut  réduction par utilisation de la règle 21 (Body)
+
+    Body        aller à l'état 53
+    BodyDec     aller à l'état 32
+    BodyInstru  aller à l'état 33
+    incr_prof   aller à l'état 34
+    Printf      aller à l'état 35
+    Affect      aller à l'état 36
+    Call        aller à l'état 37
 
 
 État 33
 
-   11 Main: tMain tLPAR tRPAR tLBRACE Body . tRBRACE
+   23 Body: BodyInstru . Body
 
-    tRBRACE  décalage et aller à l'état 54
+    tPRINT  décalage et aller à l'état 27
+    tCONST  décalage et aller à l'état 28
+    tINT    décalage et aller à l'état 29
+    tID     décalage et aller à l'état 30
+
+    tIF       réduction par utilisation de la règle 31 (incr_prof)
+    tWHILE    réduction par utilisation de la règle 31 (incr_prof)
+    $défaut  réduction par utilisation de la règle 21 (Body)
+
+    Body        aller à l'état 54
+    BodyDec     aller à l'état 32
+    BodyInstru  aller à l'état 33
+    incr_prof   aller à l'état 34
+    Printf      aller à l'état 35
+    Affect      aller à l'état 36
+    Call        aller à l'état 37
 
 
 État 34
 
-   17 Body: BodyDec . Body
+   28 BodyInstru: incr_prof . While decr_prof
+   29           | incr_prof . If decr_prof
 
-    tPRINT  décalage et aller à l'état 29
-    tCONST  décalage et aller à l'état 30
-    tINT    décalage et aller à l'état 31
-    tID     décalage et aller à l'état 32
+    tIF     décalage et aller à l'état 55
+    tWHILE  décalage et aller à l'état 56
 
-    tIF       réduction par utilisation de la règle 26 (incr_prof)
-    tWHILE    réduction par utilisation de la règle 26 (incr_prof)
-    $défaut  réduction par utilisation de la règle 16 (Body)
-
-    Body        aller à l'état 55
-    BodyDec     aller à l'état 34
-    BodyInstru  aller à l'état 35
-    incr_prof   aller à l'état 36
-    Printf      aller à l'état 37
-    Affect      aller à l'état 38
-    Call        aller à l'état 39
+    If     aller à l'état 57
+    While  aller à l'état 58
 
 
 État 35
 
-   18 Body: BodyInstru . Body
+   26 BodyInstru: Printf . BodyInstru
 
-    tPRINT  décalage et aller à l'état 29
-    tCONST  décalage et aller à l'état 30
-    tINT    décalage et aller à l'état 31
-    tID     décalage et aller à l'état 32
+    tPRINT  décalage et aller à l'état 27
+    tID     décalage et aller à l'état 30
 
-    tIF       réduction par utilisation de la règle 26 (incr_prof)
-    tWHILE    réduction par utilisation de la règle 26 (incr_prof)
-    $défaut  réduction par utilisation de la règle 16 (Body)
+    $défaut  réduction par utilisation de la règle 31 (incr_prof)
 
-    Body        aller à l'état 56
-    BodyDec     aller à l'état 34
-    BodyInstru  aller à l'état 35
-    incr_prof   aller à l'état 36
-    Printf      aller à l'état 37
-    Affect      aller à l'état 38
-    Call        aller à l'état 39
+    BodyInstru  aller à l'état 59
+    incr_prof   aller à l'état 34
+    Printf      aller à l'état 35
+    Affect      aller à l'état 36
+    Call        aller à l'état 37
 
 
 État 36
 
-   23 BodyInstru: incr_prof . While decr_prof
-   24           | incr_prof . If decr_prof
+   27 BodyInstru: Affect . tSEMI
 
-    tIF     décalage et aller à l'état 57
-    tWHILE  décalage et aller à l'état 58
-
-    If     aller à l'état 59
-    While  aller à l'état 60
+    tSEMI  décalage et aller à l'état 60
 
 
 État 37
 
-   21 BodyInstru: Printf . BodyInstru
+   30 BodyInstru: Call . tSEMI
 
-    tPRINT  décalage et aller à l'état 29
-    tID     décalage et aller à l'état 32
-
-    $défaut  réduction par utilisation de la règle 26 (incr_prof)
-
-    BodyInstru  aller à l'état 61
-    incr_prof   aller à l'état 36
-    Printf      aller à l'état 37
-    Affect      aller à l'état 38
-    Call        aller à l'état 39
+    tSEMI  décalage et aller à l'état 61
 
 
 État 38
 
-   22 BodyInstru: Affect . tSEMI
+   18 Args: tINT . tID
+   20     | tINT . tID tCOMMA $@6 Args
 
-    tSEMI  décalage et aller à l'état 62
+    tID  décalage et aller à l'état 62
 
 
 État 39
 
-   25 BodyInstru: Call . tSEMI
+   11 Declaration: tLPAR Args . tRPAR
 
-    tSEMI  décalage et aller à l'état 63
+    tRPAR  décalage et aller à l'état 63
 
 
 État 40
 
-   10 Main: tVOID tMain tLPAR tRPAR tLBRACE . Body tRBRACE
+   10 Fonction: tVOID tID $@3 Declaration tLBRACE . Body tRBRACE
 
-    tPRINT  décalage et aller à l'état 29
-    tCONST  décalage et aller à l'état 30
-    tINT    décalage et aller à l'état 31
-    tID     décalage et aller à l'état 32
+    tPRINT  décalage et aller à l'état 27
+    tCONST  décalage et aller à l'état 28
+    tINT    décalage et aller à l'état 29
+    tID     décalage et aller à l'état 30
 
-    tRBRACE   réduction par utilisation de la règle 16 (Body)
-    $défaut  réduction par utilisation de la règle 26 (incr_prof)
+    tRBRACE   réduction par utilisation de la règle 21 (Body)
+    $défaut  réduction par utilisation de la règle 31 (incr_prof)
 
     Body        aller à l'état 64
-    BodyDec     aller à l'état 34
-    BodyInstru  aller à l'état 35
-    incr_prof   aller à l'état 36
-    Printf      aller à l'état 37
-    Affect      aller à l'état 38
-    Call        aller à l'état 39
+    BodyDec     aller à l'état 32
+    BodyInstru  aller à l'état 33
+    incr_prof   aller à l'état 34
+    Printf      aller à l'état 35
+    Affect      aller à l'état 36
+    Call        aller à l'état 37
 
 
 État 41
 
-   13 Args: tINT tID .
-   15     | tINT tID . tCOMMA $@1 Args
+   15 Main: tVOID $@4 tMain $@5 incr_prof . tLPAR tRPAR tLBRACE Body tRBRACE
 
-    tCOMMA  décalage et aller à l'état 65
-
-    $défaut  réduction par utilisation de la règle 13 (Args)
+    tLPAR  décalage et aller à l'état 65
 
 
 État 42
 
-    8 Declaration: tLPAR Args tRPAR .
+   12 Main: tINT tMain tLPAR tRPAR tLBRACE . Body Return tSEMI tRBRACE
 
-    $défaut  réduction par utilisation de la règle 8 (Declaration)
+    tPRINT  décalage et aller à l'état 27
+    tCONST  décalage et aller à l'état 28
+    tINT    décalage et aller à l'état 29
+    tID     décalage et aller à l'état 30
+
+    tRETURN   réduction par utilisation de la règle 21 (Body)
+    $défaut  réduction par utilisation de la règle 31 (incr_prof)
+
+    Body        aller à l'état 66
+    BodyDec     aller à l'état 32
+    BodyInstru  aller à l'état 33
+    incr_prof   aller à l'état 34
+    Printf      aller à l'état 35
+    Affect      aller à l'état 36
+    Call        aller à l'état 37
 
 
 État 43
 
-    7 Fonction: tVOID tID Declaration tLBRACE Body . tRBRACE
+    8 Fonction: tINT tID incr_prof $@1 Declaration . tLBRACE Body Return $@2 tSEMI tRBRACE
 
-    tRBRACE  décalage et aller à l'état 66
+    tLBRACE  décalage et aller à l'état 67
 
 
 État 44
 
-    9 Main: tINT tMain tLPAR tRPAR tLBRACE . Body Return tSEMI tRBRACE
+   39 Printf: tPRINT tLPAR . Val tRPAR tSEMI
 
-    tPRINT  décalage et aller à l'état 29
-    tCONST  décalage et aller à l'état 30
-    tINT    décalage et aller à l'état 31
-    tID     décalage et aller à l'état 32
+    tNB  décalage et aller à l'état 68
+    tID  décalage et aller à l'état 69
 
-    tRETURN   réduction par utilisation de la règle 16 (Body)
-    $défaut  réduction par utilisation de la règle 26 (incr_prof)
+    $défaut  réduction par utilisation de la règle 41 (Val)
 
-    Body        aller à l'état 67
-    BodyDec     aller à l'état 34
-    BodyInstru  aller à l'état 35
-    incr_prof   aller à l'état 36
-    Printf      aller à l'état 37
-    Affect      aller à l'état 38
-    Call        aller à l'état 39
+    Val        aller à l'état 70
+    Operation  aller à l'état 71
+    Call       aller à l'état 72
 
 
 État 45
 
-    6 Fonction: tINT tID Declaration tLBRACE Body . Return tSEMI tRBRACE
+   33 Initialisationc: tID .
+   40 Affect: tID . tASSIGN Val
 
-    tRETURN  décalage et aller à l'état 68
+    tASSIGN  décalage et aller à l'état 50
 
-    Return  aller à l'état 69
+    $défaut  réduction par utilisation de la règle 33 (Initialisationc)
 
 
 État 46
 
-   34 Printf: tPRINT tLPAR . Val tRPAR tSEMI
+   25 BodyDec: tCONST Initialisationc . tSEMI
 
-    tNB  décalage et aller à l'état 70
-    tID  décalage et aller à l'état 71
-
-    $défaut  réduction par utilisation de la règle 36 (Val)
-
-    Val   aller à l'état 72
-    Call  aller à l'état 73
+    tSEMI  décalage et aller à l'état 73
 
 
 État 47
 
-   28 Initialisationc: tID .
-   35 Affect: tID . tASSIGN Val
+   34 Initialisationc: Affect .
 
-    tASSIGN  décalage et aller à l'état 52
-
-    $défaut  réduction par utilisation de la règle 28 (Initialisationc)
+    $défaut  réduction par utilisation de la règle 34 (Initialisationc)
 
 
 État 48
 
-   20 BodyDec: tCONST Initialisationc . tSEMI
+   35 Initialisation: tID .
+   37               | tID . tASSIGN $@7 Val
 
-    tSEMI  décalage et aller à l'état 74
+    tASSIGN  décalage et aller à l'état 74
+
+    $défaut  réduction par utilisation de la règle 35 (Initialisation)
 
 
 État 49
 
-   29 Initialisationc: Affect .
+   24 BodyDec: tINT Initialisation . tSEMI
+   38 Initialisation: Initialisation . tCOMMA Initialisation
 
-    $défaut  réduction par utilisation de la règle 29 (Initialisationc)
+    tSEMI   décalage et aller à l'état 75
+    tCOMMA  décalage et aller à l'état 76
 
 
 État 50
 
-   30 Initialisation: tID .
-   32               | tID . tASSIGN $@2 Val
+   40 Affect: tID tASSIGN . Val
 
-    tASSIGN  décalage et aller à l'état 75
+    tNB  décalage et aller à l'état 68
+    tID  décalage et aller à l'état 69
 
-    $défaut  réduction par utilisation de la règle 30 (Initialisation)
+    $défaut  réduction par utilisation de la règle 41 (Val)
+
+    Val        aller à l'état 77
+    Operation  aller à l'état 71
+    Call       aller à l'état 72
 
 
 État 51
 
-   19 BodyDec: tINT Initialisation . tSEMI
-   33 Initialisation: Initialisation . tCOMMA Initialisation
+   81 Call: tID tLPAR . Parametre tRPAR
 
-    tSEMI   décalage et aller à l'état 76
-    tCOMMA  décalage et aller à l'état 77
+    tNB  décalage et aller à l'état 68
+    tID  décalage et aller à l'état 69
+
+    $défaut  réduction par utilisation de la règle 41 (Val)
+
+    Val        aller à l'état 78
+    Operation  aller à l'état 71
+    Parametre  aller à l'état 79
+    Call       aller à l'état 72
 
 
 État 52
 
-   35 Affect: tID tASSIGN . Val
+   16 Main: tMain tLPAR tRPAR tLBRACE Body tRBRACE .
 
-    tNB  décalage et aller à l'état 70
-    tID  décalage et aller à l'état 71
-
-    $défaut  réduction par utilisation de la règle 36 (Val)
-
-    Val   aller à l'état 78
-    Call  aller à l'état 73
+    $défaut  réduction par utilisation de la règle 16 (Main)
 
 
 État 53
 
-   76 Call: tID tLPAR . Parametre tRPAR
+   22 Body: BodyDec Body .
 
-    tNB  décalage et aller à l'état 70
-    tID  décalage et aller à l'état 71
-
-    $défaut  réduction par utilisation de la règle 36 (Val)
-
-    Val        aller à l'état 79
-    Parametre  aller à l'état 80
-    Call       aller à l'état 73
+    $défaut  réduction par utilisation de la règle 22 (Body)
 
 
 État 54
 
-   11 Main: tMain tLPAR tRPAR tLBRACE Body tRBRACE .
+   23 Body: BodyInstru Body .
 
-    $défaut  réduction par utilisation de la règle 11 (Main)
+    $défaut  réduction par utilisation de la règle 23 (Body)
 
 
 État 55
 
-   17 Body: BodyDec Body .
+   70 If: tIF . tLPAR Logic tRPAR $@18 BodyCond Else
 
-    $défaut  réduction par utilisation de la règle 17 (Body)
+    tLPAR  décalage et aller à l'état 80
 
 
 État 56
 
-   18 Body: BodyInstru Body .
-
-    $défaut  réduction par utilisation de la règle 18 (Body)
-
-
-État 57
-
-   65 If: tIF . tLPAR Logic tRPAR $@13 BodyCond Else
+   75 While: tWHILE . tLPAR LVal tRPAR $@20 BodyCond
 
     tLPAR  décalage et aller à l'état 81
 
 
+État 57
+
+   29 BodyInstru: incr_prof If . decr_prof
+
+    $défaut  réduction par utilisation de la règle 32 (decr_prof)
+
+    decr_prof  aller à l'état 82
+
+
 État 58
 
-   70 While: tWHILE . tLPAR LVal tRPAR $@15 BodyCond
+   28 BodyInstru: incr_prof While . decr_prof
 
-    tLPAR  décalage et aller à l'état 82
-
-
-État 59
-
-   24 BodyInstru: incr_prof If . decr_prof
-
-    $défaut  réduction par utilisation de la règle 27 (decr_prof)
+    $défaut  réduction par utilisation de la règle 32 (decr_prof)
 
     decr_prof  aller à l'état 83
 
 
+État 59
+
+   26 BodyInstru: Printf BodyInstru .
+
+    $défaut  réduction par utilisation de la règle 26 (BodyInstru)
+
+
 État 60
 
-   23 BodyInstru: incr_prof While . decr_prof
+   27 BodyInstru: Affect tSEMI .
 
-    $défaut  réduction par utilisation de la règle 27 (decr_prof)
-
-    decr_prof  aller à l'état 84
+    $défaut  réduction par utilisation de la règle 27 (BodyInstru)
 
 
 État 61
 
-   21 BodyInstru: Printf BodyInstru .
+   30 BodyInstru: Call tSEMI .
 
-    $défaut  réduction par utilisation de la règle 21 (BodyInstru)
+    $défaut  réduction par utilisation de la règle 30 (BodyInstru)
 
 
 État 62
 
-   22 BodyInstru: Affect tSEMI .
+   18 Args: tINT tID .
+   20     | tINT tID . tCOMMA $@6 Args
 
-    $défaut  réduction par utilisation de la règle 22 (BodyInstru)
+    tCOMMA  décalage et aller à l'état 84
+
+    $défaut  réduction par utilisation de la règle 18 (Args)
 
 
 État 63
 
-   25 BodyInstru: Call tSEMI .
+   11 Declaration: tLPAR Args tRPAR .
 
-    $défaut  réduction par utilisation de la règle 25 (BodyInstru)
+    $défaut  réduction par utilisation de la règle 11 (Declaration)
 
 
 État 64
 
-   10 Main: tVOID tMain tLPAR tRPAR tLBRACE Body . tRBRACE
+   10 Fonction: tVOID tID $@3 Declaration tLBRACE Body . tRBRACE
 
     tRBRACE  décalage et aller à l'état 85
 
 
 État 65
 
-   15 Args: tINT tID tCOMMA . $@1 Args
+   15 Main: tVOID $@4 tMain $@5 incr_prof tLPAR . tRPAR tLBRACE Body tRBRACE
 
-    $défaut  réduction par utilisation de la règle 14 ($@1)
-
-    $@1  aller à l'état 86
+    tRPAR  décalage et aller à l'état 86
 
 
 État 66
 
-    7 Fonction: tVOID tID Declaration tLBRACE Body tRBRACE .
+   12 Main: tINT tMain tLPAR tRPAR tLBRACE Body . Return tSEMI tRBRACE
 
-    $défaut  réduction par utilisation de la règle 7 (Fonction)
+    tRETURN  décalage et aller à l'état 87
+
+    Return  aller à l'état 88
 
 
 État 67
 
-    9 Main: tINT tMain tLPAR tRPAR tLBRACE Body . Return tSEMI tRBRACE
+    8 Fonction: tINT tID incr_prof $@1 Declaration tLBRACE . Body Return $@2 tSEMI tRBRACE
 
-    tRETURN  décalage et aller à l'état 68
+    tPRINT  décalage et aller à l'état 27
+    tCONST  décalage et aller à l'état 28
+    tINT    décalage et aller à l'état 29
+    tID     décalage et aller à l'état 30
 
-    Return  aller à l'état 87
+    tRETURN   réduction par utilisation de la règle 21 (Body)
+    $défaut  réduction par utilisation de la règle 31 (incr_prof)
+
+    Body        aller à l'état 89
+    BodyDec     aller à l'état 32
+    BodyInstru  aller à l'état 33
+    incr_prof   aller à l'état 34
+    Printf      aller à l'état 35
+    Affect      aller à l'état 36
+    Call        aller à l'état 37
 
 
 État 68
 
-   74 Return: tRETURN . tLPAR Val tRPAR
-   75       | tRETURN . Val
+   43 Val: tNB .
 
-    tLPAR  décalage et aller à l'état 88
-    tNB    décalage et aller à l'état 70
-    tID    décalage et aller à l'état 71
-
-    $défaut  réduction par utilisation de la règle 36 (Val)
-
-    Val   aller à l'état 89
-    Call  aller à l'état 73
+    $défaut  réduction par utilisation de la règle 43 (Val)
 
 
 État 69
 
-    6 Fonction: tINT tID Declaration tLBRACE Body Return . tSEMI tRBRACE
+   42 Val: tID .
+   81 Call: tID . tLPAR Parametre tRPAR
 
-    tSEMI  décalage et aller à l'état 90
+    tLPAR  décalage et aller à l'état 51
+
+    $défaut  réduction par utilisation de la règle 42 (Val)
 
 
 État 70
 
-   38 Val: tNB .
+   39 Printf: tPRINT tLPAR Val . tRPAR tSEMI
+   47 Operation: Val . tADD Val $@8
+   49          | Val . tMUL Val $@9
+   51          | Val . tDIV Val $@10
+   53          | Val . tSUB Val $@11
 
-    $défaut  réduction par utilisation de la règle 38 (Val)
+    tRPAR  décalage et aller à l'état 90
+    tADD   décalage et aller à l'état 91
+    tMUL   décalage et aller à l'état 92
+    tDIV   décalage et aller à l'état 93
+    tSUB   décalage et aller à l'état 94
 
 
 État 71
 
-   37 Val: tID .
-   76 Call: tID . tLPAR Parametre tRPAR
+   44 Val: Operation .
 
-    tLPAR  décalage et aller à l'état 53
-
-    $défaut  réduction par utilisation de la règle 37 (Val)
+    $défaut  réduction par utilisation de la règle 44 (Val)
 
 
 État 72
 
-   34 Printf: tPRINT tLPAR Val . tRPAR tSEMI
-   39 Val: Val . Operation Val
+   45 Val: Call .
 
-    tRPAR  décalage et aller à l'état 91
-    tADD   décalage et aller à l'état 92
-    tMUL   décalage et aller à l'état 93
-    tDIV   décalage et aller à l'état 94
-    tSUB   décalage et aller à l'état 95
-
-    Operation  aller à l'état 96
+    $défaut  réduction par utilisation de la règle 45 (Val)
 
 
 État 73
 
-   40 Val: Call .
+   25 BodyDec: tCONST Initialisationc tSEMI .
 
-    $défaut  réduction par utilisation de la règle 40 (Val)
+    $défaut  réduction par utilisation de la règle 25 (BodyDec)
 
 
 État 74
 
-   20 BodyDec: tCONST Initialisationc tSEMI .
+   37 Initialisation: tID tASSIGN . $@7 Val
 
-    $défaut  réduction par utilisation de la règle 20 (BodyDec)
+    $défaut  réduction par utilisation de la règle 36 ($@7)
+
+    $@7  aller à l'état 95
 
 
 État 75
 
-   32 Initialisation: tID tASSIGN . $@2 Val
+   24 BodyDec: tINT Initialisation tSEMI .
 
-    $défaut  réduction par utilisation de la règle 31 ($@2)
-
-    $@2  aller à l'état 97
+    $défaut  réduction par utilisation de la règle 24 (BodyDec)
 
 
 État 76
 
-   19 BodyDec: tINT Initialisation tSEMI .
+   38 Initialisation: Initialisation tCOMMA . Initialisation
 
-    $défaut  réduction par utilisation de la règle 19 (BodyDec)
+    tID  décalage et aller à l'état 48
+
+    Initialisation  aller à l'état 96
 
 
 État 77
 
-   33 Initialisation: Initialisation tCOMMA . Initialisation
+   40 Affect: tID tASSIGN Val .
+   47 Operation: Val . tADD Val $@8
+   49          | Val . tMUL Val $@9
+   51          | Val . tDIV Val $@10
+   53          | Val . tSUB Val $@11
 
-    tID  décalage et aller à l'état 50
+    tADD  décalage et aller à l'état 91
+    tMUL  décalage et aller à l'état 92
+    tDIV  décalage et aller à l'état 93
+    tSUB  décalage et aller à l'état 94
 
-    Initialisation  aller à l'état 98
+    $défaut  réduction par utilisation de la règle 40 (Affect)
 
 
 État 78
 
-   35 Affect: tID tASSIGN Val .
-   39 Val: Val . Operation Val
+   47 Operation: Val . tADD Val $@8
+   49          | Val . tMUL Val $@9
+   51          | Val . tDIV Val $@10
+   53          | Val . tSUB Val $@11
+   77 Parametre: Val .
+   78          | Val . tCOMMA Parametre
 
-    tADD  décalage et aller à l'état 92
-    tMUL  décalage et aller à l'état 93
-    tDIV  décalage et aller à l'état 94
-    tSUB  décalage et aller à l'état 95
+    tCOMMA  décalage et aller à l'état 97
+    tADD    décalage et aller à l'état 91
+    tMUL    décalage et aller à l'état 92
+    tDIV    décalage et aller à l'état 93
+    tSUB    décalage et aller à l'état 94
 
-    $défaut  réduction par utilisation de la règle 35 (Affect)
-
-    Operation  aller à l'état 96
+    $défaut  réduction par utilisation de la règle 77 (Parametre)
 
 
 État 79
 
-   39 Val: Val . Operation Val
-   72 Parametre: Val .
-   73          | Val . tCOMMA Parametre
+   81 Call: tID tLPAR Parametre . tRPAR
 
-    tCOMMA  décalage et aller à l'état 99
-    tADD    décalage et aller à l'état 92
-    tMUL    décalage et aller à l'état 93
-    tDIV    décalage et aller à l'état 94
-    tSUB    décalage et aller à l'état 95
-
-    $défaut  réduction par utilisation de la règle 72 (Parametre)
-
-    Operation  aller à l'état 96
+    tRPAR  décalage et aller à l'état 98
 
 
 État 80
 
-   76 Call: tID tLPAR Parametre . tRPAR
+   70 If: tIF tLPAR . Logic tRPAR $@18 BodyCond Else
 
-    tRPAR  décalage et aller à l'état 100
+    tLPAR  décalage et aller à l'état 99
+    tNB    décalage et aller à l'état 68
+    tID    décalage et aller à l'état 69
+
+    $défaut  réduction par utilisation de la règle 41 (Val)
+
+    Val        aller à l'état 100
+    Operation  aller à l'état 71
+    LVal       aller à l'état 101
+    Logic      aller à l'état 102
+    Call       aller à l'état 72
 
 
 État 81
 
-   65 If: tIF tLPAR . Logic tRPAR $@13 BodyCond Else
+   75 While: tWHILE tLPAR . LVal tRPAR $@20 BodyCond
 
-    tLPAR  décalage et aller à l'état 101
-    tNB    décalage et aller à l'état 70
-    tID    décalage et aller à l'état 71
+    tLPAR  décalage et aller à l'état 99
+    tNB    décalage et aller à l'état 68
+    tID    décalage et aller à l'état 69
 
-    $défaut  réduction par utilisation de la règle 36 (Val)
+    $défaut  réduction par utilisation de la règle 41 (Val)
 
-    Val    aller à l'état 102
-    LVal   aller à l'état 103
-    Logic  aller à l'état 104
-    Call   aller à l'état 73
+    Val        aller à l'état 100
+    Operation  aller à l'état 71
+    LVal       aller à l'état 103
+    Call       aller à l'état 72
 
 
 État 82
 
-   70 While: tWHILE tLPAR . LVal tRPAR $@15 BodyCond
+   29 BodyInstru: incr_prof If decr_prof .
 
-    tLPAR  décalage et aller à l'état 101
-    tNB    décalage et aller à l'état 70
-    tID    décalage et aller à l'état 71
-
-    $défaut  réduction par utilisation de la règle 36 (Val)
-
-    Val   aller à l'état 102
-    LVal  aller à l'état 105
-    Call  aller à l'état 73
+    $défaut  réduction par utilisation de la règle 29 (BodyInstru)
 
 
 État 83
 
-   24 BodyInstru: incr_prof If decr_prof .
+   28 BodyInstru: incr_prof While decr_prof .
 
-    $défaut  réduction par utilisation de la règle 24 (BodyInstru)
+    $défaut  réduction par utilisation de la règle 28 (BodyInstru)
 
 
 État 84
 
-   23 BodyInstru: incr_prof While decr_prof .
+   20 Args: tINT tID tCOMMA . $@6 Args
 
-    $défaut  réduction par utilisation de la règle 23 (BodyInstru)
+    $défaut  réduction par utilisation de la règle 19 ($@6)
+
+    $@6  aller à l'état 104
 
 
 État 85
 
-   10 Main: tVOID tMain tLPAR tRPAR tLBRACE Body tRBRACE .
+   10 Fonction: tVOID tID $@3 Declaration tLBRACE Body tRBRACE .
 
-    $défaut  réduction par utilisation de la règle 10 (Main)
+    $défaut  réduction par utilisation de la règle 10 (Fonction)
 
 
 État 86
 
-   15 Args: tINT tID tCOMMA $@1 . Args
+   15 Main: tVOID $@4 tMain $@5 incr_prof tLPAR tRPAR . tLBRACE Body tRBRACE
 
-    tINT  décalage et aller à l'état 24
-
-    $défaut  réduction par utilisation de la règle 12 (Args)
-
-    Args  aller à l'état 106
+    tLBRACE  décalage et aller à l'état 105
 
 
 État 87
 
-    9 Main: tINT tMain tLPAR tRPAR tLBRACE Body Return . tSEMI tRBRACE
+   79 Return: tRETURN . tLPAR Val tRPAR
+   80       | tRETURN . Val
 
-    tSEMI  décalage et aller à l'état 107
+    tLPAR  décalage et aller à l'état 106
+    tNB    décalage et aller à l'état 68
+    tID    décalage et aller à l'état 69
+
+    $défaut  réduction par utilisation de la règle 41 (Val)
+
+    Val        aller à l'état 107
+    Operation  aller à l'état 71
+    Call       aller à l'état 72
 
 
 État 88
 
-   74 Return: tRETURN tLPAR . Val tRPAR
+   12 Main: tINT tMain tLPAR tRPAR tLBRACE Body Return . tSEMI tRBRACE
 
-    tNB  décalage et aller à l'état 70
-    tID  décalage et aller à l'état 71
-
-    $défaut  réduction par utilisation de la règle 36 (Val)
-
-    Val   aller à l'état 108
-    Call  aller à l'état 73
+    tSEMI  décalage et aller à l'état 108
 
 
 État 89
 
-   39 Val: Val . Operation Val
-   75 Return: tRETURN Val .
+    8 Fonction: tINT tID incr_prof $@1 Declaration tLBRACE Body . Return $@2 tSEMI tRBRACE
 
-    tADD  décalage et aller à l'état 92
-    tMUL  décalage et aller à l'état 93
-    tDIV  décalage et aller à l'état 94
-    tSUB  décalage et aller à l'état 95
+    tRETURN  décalage et aller à l'état 87
 
-    $défaut  réduction par utilisation de la règle 75 (Return)
-
-    Operation  aller à l'état 96
+    Return  aller à l'état 109
 
 
 État 90
 
-    6 Fonction: tINT tID Declaration tLBRACE Body Return tSEMI . tRBRACE
-
-    tRBRACE  décalage et aller à l'état 109
-
-
-État 91
-
-   34 Printf: tPRINT tLPAR Val tRPAR . tSEMI
+   39 Printf: tPRINT tLPAR Val tRPAR . tSEMI
 
     tSEMI  décalage et aller à l'état 110
 
 
+État 91
+
+   47 Operation: Val tADD . Val $@8
+
+    tNB  décalage et aller à l'état 68
+    tID  décalage et aller à l'état 69
+
+    $défaut  réduction par utilisation de la règle 41 (Val)
+
+    Val        aller à l'état 111
+    Operation  aller à l'état 71
+    Call       aller à l'état 72
+
+
 État 92
 
-   42 Operation: tADD . $@3
+   49 Operation: Val tMUL . Val $@9
 
-    $défaut  réduction par utilisation de la règle 41 ($@3)
+    tNB  décalage et aller à l'état 68
+    tID  décalage et aller à l'état 69
 
-    $@3  aller à l'état 111
+    $défaut  réduction par utilisation de la règle 41 (Val)
+
+    Val        aller à l'état 112
+    Operation  aller à l'état 71
+    Call       aller à l'état 72
 
 
 État 93
 
-   44 Operation: tMUL . $@4
+   51 Operation: Val tDIV . Val $@10
 
-    $défaut  réduction par utilisation de la règle 43 ($@4)
+    tNB  décalage et aller à l'état 68
+    tID  décalage et aller à l'état 69
 
-    $@4  aller à l'état 112
+    $défaut  réduction par utilisation de la règle 41 (Val)
+
+    Val        aller à l'état 113
+    Operation  aller à l'état 71
+    Call       aller à l'état 72
 
 
 État 94
 
-   46 Operation: tDIV . $@5
+   53 Operation: Val tSUB . Val $@11
 
-    $défaut  réduction par utilisation de la règle 45 ($@5)
+    tNB  décalage et aller à l'état 68
+    tID  décalage et aller à l'état 69
 
-    $@5  aller à l'état 113
+    $défaut  réduction par utilisation de la règle 41 (Val)
+
+    Val        aller à l'état 114
+    Operation  aller à l'état 71
+    Call       aller à l'état 72
 
 
 État 95
 
-   48 Operation: tSUB . $@6
+   37 Initialisation: tID tASSIGN $@7 . Val
 
-    $défaut  réduction par utilisation de la règle 47 ($@6)
+    tNB  décalage et aller à l'état 68
+    tID  décalage et aller à l'état 69
 
-    $@6  aller à l'état 114
+    $défaut  réduction par utilisation de la règle 41 (Val)
+
+    Val        aller à l'état 115
+    Operation  aller à l'état 71
+    Call       aller à l'état 72
 
 
 État 96
 
-   39 Val: Val Operation . Val
+   38 Initialisation: Initialisation . tCOMMA Initialisation
+   38               | Initialisation tCOMMA Initialisation .
 
-    tNB  décalage et aller à l'état 70
-    tID  décalage et aller à l'état 71
-
-    $défaut  réduction par utilisation de la règle 36 (Val)
-
-    Val   aller à l'état 115
-    Call  aller à l'état 73
+    $défaut  réduction par utilisation de la règle 38 (Initialisation)
 
 
 État 97
 
-   32 Initialisation: tID tASSIGN $@2 . Val
+   78 Parametre: Val tCOMMA . Parametre
 
-    tNB  décalage et aller à l'état 70
-    tID  décalage et aller à l'état 71
+    tNB  décalage et aller à l'état 68
+    tID  décalage et aller à l'état 69
 
-    $défaut  réduction par utilisation de la règle 36 (Val)
+    $défaut  réduction par utilisation de la règle 41 (Val)
 
-    Val   aller à l'état 116
-    Call  aller à l'état 73
+    Val        aller à l'état 78
+    Operation  aller à l'état 71
+    Parametre  aller à l'état 116
+    Call       aller à l'état 72
 
 
 État 98
 
-   33 Initialisation: Initialisation . tCOMMA Initialisation
-   33               | Initialisation tCOMMA Initialisation .
+   81 Call: tID tLPAR Parametre tRPAR .
 
-    $défaut  réduction par utilisation de la règle 33 (Initialisation)
+    $défaut  réduction par utilisation de la règle 81 (Call)
 
 
 État 99
 
-   73 Parametre: Val tCOMMA . Parametre
+   55 LVal: tLPAR . Val tRPAR
 
-    tNB  décalage et aller à l'état 70
-    tID  décalage et aller à l'état 71
+    tNB  décalage et aller à l'état 68
+    tID  décalage et aller à l'état 69
 
-    $défaut  réduction par utilisation de la règle 36 (Val)
+    $défaut  réduction par utilisation de la règle 41 (Val)
 
-    Val        aller à l'état 79
-    Parametre  aller à l'état 117
-    Call       aller à l'état 73
+    Val        aller à l'état 117
+    Operation  aller à l'état 71
+    Call       aller à l'état 72
 
 
 État 100
 
-   76 Call: tID tLPAR Parametre tRPAR .
+   47 Operation: Val . tADD Val $@8
+   49          | Val . tMUL Val $@9
+   51          | Val . tDIV Val $@10
+   53          | Val . tSUB Val $@11
+   54 LVal: Val .
 
-    $défaut  réduction par utilisation de la règle 76 (Call)
+    tADD  décalage et aller à l'état 91
+    tMUL  décalage et aller à l'état 92
+    tDIV  décalage et aller à l'état 93
+    tSUB  décalage et aller à l'état 94
+
+    $défaut  réduction par utilisation de la règle 54 (LVal)
 
 
 État 101
 
-   50 LVal: tLPAR . Val tRPAR
+   56 Logic: LVal .
+   58      | LVal . tEQ LVal $@12
+   60      | LVal . tLT LVal $@13
+   62      | LVal . tGT LVal $@14
+   64      | LVal . tNE LVal $@15
+   66      | LVal . tGE LVal $@16
+   68      | LVal . tLE LVal $@17
 
-    tNB  décalage et aller à l'état 70
-    tID  décalage et aller à l'état 71
+    tEQ  décalage et aller à l'état 118
+    tLT  décalage et aller à l'état 119
+    tGT  décalage et aller à l'état 120
+    tNE  décalage et aller à l'état 121
+    tGE  décalage et aller à l'état 122
+    tLE  décalage et aller à l'état 123
 
-    $défaut  réduction par utilisation de la règle 36 (Val)
-
-    Val   aller à l'état 118
-    Call  aller à l'état 73
+    $défaut  réduction par utilisation de la règle 56 (Logic)
 
 
 État 102
 
-   39 Val: Val . Operation Val
-   49 LVal: Val .
+   70 If: tIF tLPAR Logic . tRPAR $@18 BodyCond Else
 
-    tADD  décalage et aller à l'état 92
-    tMUL  décalage et aller à l'état 93
-    tDIV  décalage et aller à l'état 94
-    tSUB  décalage et aller à l'état 95
-
-    $défaut  réduction par utilisation de la règle 49 (LVal)
-
-    Operation  aller à l'état 96
+    tRPAR  décalage et aller à l'état 124
 
 
 État 103
 
-   51 Logic: LVal .
-   53      | LVal . tEQ LVal $@7
-   55      | LVal . tLT LVal $@8
-   57      | LVal . tGT LVal $@9
-   59      | LVal . tNE LVal $@10
-   61      | LVal . tGE LVal $@11
-   63      | LVal . tLE LVal $@12
-
-    tEQ  décalage et aller à l'état 119
-    tLT  décalage et aller à l'état 120
-    tGT  décalage et aller à l'état 121
-    tNE  décalage et aller à l'état 122
-    tGE  décalage et aller à l'état 123
-    tLE  décalage et aller à l'état 124
-
-    $défaut  réduction par utilisation de la règle 51 (Logic)
-
-
-État 104
-
-   65 If: tIF tLPAR Logic . tRPAR $@13 BodyCond Else
+   75 While: tWHILE tLPAR LVal . tRPAR $@20 BodyCond
 
     tRPAR  décalage et aller à l'état 125
 
 
+État 104
+
+   20 Args: tINT tID tCOMMA $@6 . Args
+
+    tINT  décalage et aller à l'état 38
+
+    $défaut  réduction par utilisation de la règle 17 (Args)
+
+    Args  aller à l'état 126
+
+
 État 105
 
-   70 While: tWHILE tLPAR LVal . tRPAR $@15 BodyCond
+   15 Main: tVOID $@4 tMain $@5 incr_prof tLPAR tRPAR tLBRACE . Body tRBRACE
 
-    tRPAR  décalage et aller à l'état 126
+    tPRINT  décalage et aller à l'état 27
+    tCONST  décalage et aller à l'état 28
+    tINT    décalage et aller à l'état 29
+    tID     décalage et aller à l'état 30
+
+    tRBRACE   réduction par utilisation de la règle 21 (Body)
+    $défaut  réduction par utilisation de la règle 31 (incr_prof)
+
+    Body        aller à l'état 127
+    BodyDec     aller à l'état 32
+    BodyInstru  aller à l'état 33
+    incr_prof   aller à l'état 34
+    Printf      aller à l'état 35
+    Affect      aller à l'état 36
+    Call        aller à l'état 37
 
 
 État 106
 
-   15 Args: tINT tID tCOMMA $@1 Args .
+   79 Return: tRETURN tLPAR . Val tRPAR
 
-    $défaut  réduction par utilisation de la règle 15 (Args)
+    tNB  décalage et aller à l'état 68
+    tID  décalage et aller à l'état 69
+
+    $défaut  réduction par utilisation de la règle 41 (Val)
+
+    Val        aller à l'état 128
+    Operation  aller à l'état 71
+    Call       aller à l'état 72
 
 
 État 107
 
-    9 Main: tINT tMain tLPAR tRPAR tLBRACE Body Return tSEMI . tRBRACE
+   47 Operation: Val . tADD Val $@8
+   49          | Val . tMUL Val $@9
+   51          | Val . tDIV Val $@10
+   53          | Val . tSUB Val $@11
+   80 Return: tRETURN Val .
 
-    tRBRACE  décalage et aller à l'état 127
+    tADD  décalage et aller à l'état 91
+    tMUL  décalage et aller à l'état 92
+    tDIV  décalage et aller à l'état 93
+    tSUB  décalage et aller à l'état 94
+
+    $défaut  réduction par utilisation de la règle 80 (Return)
 
 
 État 108
 
-   39 Val: Val . Operation Val
-   74 Return: tRETURN tLPAR Val . tRPAR
+   12 Main: tINT tMain tLPAR tRPAR tLBRACE Body Return tSEMI . tRBRACE
 
-    tRPAR  décalage et aller à l'état 128
-    tADD   décalage et aller à l'état 92
-    tMUL   décalage et aller à l'état 93
-    tDIV   décalage et aller à l'état 94
-    tSUB   décalage et aller à l'état 95
-
-    Operation  aller à l'état 96
+    tRBRACE  décalage et aller à l'état 129
 
 
 État 109
 
-    6 Fonction: tINT tID Declaration tLBRACE Body Return tSEMI tRBRACE .
+    8 Fonction: tINT tID incr_prof $@1 Declaration tLBRACE Body Return . $@2 tSEMI tRBRACE
 
-    $défaut  réduction par utilisation de la règle 6 (Fonction)
+    $défaut  réduction par utilisation de la règle 7 ($@2)
+
+    $@2  aller à l'état 130
 
 
 État 110
 
-   34 Printf: tPRINT tLPAR Val tRPAR tSEMI .
+   39 Printf: tPRINT tLPAR Val tRPAR tSEMI .
 
-    $défaut  réduction par utilisation de la règle 34 (Printf)
+    $défaut  réduction par utilisation de la règle 39 (Printf)
 
 
 État 111
 
-   42 Operation: tADD $@3 .
+   47 Operation: Val . tADD Val $@8
+   47          | Val tADD Val . $@8
+   49          | Val . tMUL Val $@9
+   51          | Val . tDIV Val $@10
+   53          | Val . tSUB Val $@11
 
-    $défaut  réduction par utilisation de la règle 42 (Operation)
+    tADD  décalage et aller à l'état 91
+    tMUL  décalage et aller à l'état 92
+    tDIV  décalage et aller à l'état 93
+    tSUB  décalage et aller à l'état 94
+
+    tADD      [réduction par utilisation de la règle 46 ($@8)]
+    tMUL      [réduction par utilisation de la règle 46 ($@8)]
+    tDIV      [réduction par utilisation de la règle 46 ($@8)]
+    tSUB      [réduction par utilisation de la règle 46 ($@8)]
+    $défaut  réduction par utilisation de la règle 46 ($@8)
+
+    $@8  aller à l'état 131
 
 
 État 112
 
-   44 Operation: tMUL $@4 .
+   47 Operation: Val . tADD Val $@8
+   49          | Val . tMUL Val $@9
+   49          | Val tMUL Val . $@9
+   51          | Val . tDIV Val $@10
+   53          | Val . tSUB Val $@11
 
-    $défaut  réduction par utilisation de la règle 44 (Operation)
+    tADD  décalage et aller à l'état 91
+    tMUL  décalage et aller à l'état 92
+    tDIV  décalage et aller à l'état 93
+    tSUB  décalage et aller à l'état 94
+
+    tADD      [réduction par utilisation de la règle 48 ($@9)]
+    tMUL      [réduction par utilisation de la règle 48 ($@9)]
+    tDIV      [réduction par utilisation de la règle 48 ($@9)]
+    tSUB      [réduction par utilisation de la règle 48 ($@9)]
+    $défaut  réduction par utilisation de la règle 48 ($@9)
+
+    $@9  aller à l'état 132
 
 
 État 113
 
-   46 Operation: tDIV $@5 .
+   47 Operation: Val . tADD Val $@8
+   49          | Val . tMUL Val $@9
+   51          | Val . tDIV Val $@10
+   51          | Val tDIV Val . $@10
+   53          | Val . tSUB Val $@11
 
-    $défaut  réduction par utilisation de la règle 46 (Operation)
+    tADD  décalage et aller à l'état 91
+    tMUL  décalage et aller à l'état 92
+    tDIV  décalage et aller à l'état 93
+    tSUB  décalage et aller à l'état 94
+
+    tADD      [réduction par utilisation de la règle 50 ($@10)]
+    tMUL      [réduction par utilisation de la règle 50 ($@10)]
+    tDIV      [réduction par utilisation de la règle 50 ($@10)]
+    tSUB      [réduction par utilisation de la règle 50 ($@10)]
+    $défaut  réduction par utilisation de la règle 50 ($@10)
+
+    $@10  aller à l'état 133
 
 
 État 114
 
-   48 Operation: tSUB $@6 .
+   47 Operation: Val . tADD Val $@8
+   49          | Val . tMUL Val $@9
+   51          | Val . tDIV Val $@10
+   53          | Val . tSUB Val $@11
+   53          | Val tSUB Val . $@11
 
-    $défaut  réduction par utilisation de la règle 48 (Operation)
+    tADD  décalage et aller à l'état 91
+    tMUL  décalage et aller à l'état 92
+    tDIV  décalage et aller à l'état 93
+    tSUB  décalage et aller à l'état 94
+
+    tADD      [réduction par utilisation de la règle 52 ($@11)]
+    tMUL      [réduction par utilisation de la règle 52 ($@11)]
+    tDIV      [réduction par utilisation de la règle 52 ($@11)]
+    tSUB      [réduction par utilisation de la règle 52 ($@11)]
+    $défaut  réduction par utilisation de la règle 52 ($@11)
+
+    $@11  aller à l'état 134
 
 
 État 115
 
-   39 Val: Val . Operation Val
-   39    | Val Operation Val .
+   37 Initialisation: tID tASSIGN $@7 Val .
+   47 Operation: Val . tADD Val $@8
+   49          | Val . tMUL Val $@9
+   51          | Val . tDIV Val $@10
+   53          | Val . tSUB Val $@11
 
-    tADD  décalage et aller à l'état 92
-    tMUL  décalage et aller à l'état 93
-    tDIV  décalage et aller à l'état 94
-    tSUB  décalage et aller à l'état 95
+    tADD  décalage et aller à l'état 91
+    tMUL  décalage et aller à l'état 92
+    tDIV  décalage et aller à l'état 93
+    tSUB  décalage et aller à l'état 94
 
-    tADD      [réduction par utilisation de la règle 39 (Val)]
-    tMUL      [réduction par utilisation de la règle 39 (Val)]
-    tDIV      [réduction par utilisation de la règle 39 (Val)]
-    tSUB      [réduction par utilisation de la règle 39 (Val)]
-    $défaut  réduction par utilisation de la règle 39 (Val)
-
-    Operation  aller à l'état 96
+    $défaut  réduction par utilisation de la règle 37 (Initialisation)
 
 
 État 116
 
-   32 Initialisation: tID tASSIGN $@2 Val .
-   39 Val: Val . Operation Val
+   78 Parametre: Val tCOMMA Parametre .
 
-    tADD  décalage et aller à l'état 92
-    tMUL  décalage et aller à l'état 93
-    tDIV  décalage et aller à l'état 94
-    tSUB  décalage et aller à l'état 95
-
-    $défaut  réduction par utilisation de la règle 32 (Initialisation)
-
-    Operation  aller à l'état 96
+    $défaut  réduction par utilisation de la règle 78 (Parametre)
 
 
 État 117
 
-   73 Parametre: Val tCOMMA Parametre .
+   47 Operation: Val . tADD Val $@8
+   49          | Val . tMUL Val $@9
+   51          | Val . tDIV Val $@10
+   53          | Val . tSUB Val $@11
+   55 LVal: tLPAR Val . tRPAR
 
-    $défaut  réduction par utilisation de la règle 73 (Parametre)
+    tRPAR  décalage et aller à l'état 135
+    tADD   décalage et aller à l'état 91
+    tMUL   décalage et aller à l'état 92
+    tDIV   décalage et aller à l'état 93
+    tSUB   décalage et aller à l'état 94
 
 
 État 118
 
-   39 Val: Val . Operation Val
-   50 LVal: tLPAR Val . tRPAR
+   58 Logic: LVal tEQ . LVal $@12
 
-    tRPAR  décalage et aller à l'état 129
-    tADD   décalage et aller à l'état 92
-    tMUL   décalage et aller à l'état 93
-    tDIV   décalage et aller à l'état 94
-    tSUB   décalage et aller à l'état 95
+    tLPAR  décalage et aller à l'état 99
+    tNB    décalage et aller à l'état 68
+    tID    décalage et aller à l'état 69
 
-    Operation  aller à l'état 96
+    $défaut  réduction par utilisation de la règle 41 (Val)
+
+    Val        aller à l'état 100
+    Operation  aller à l'état 71
+    LVal       aller à l'état 136
+    Call       aller à l'état 72
 
 
 État 119
 
-   53 Logic: LVal tEQ . LVal $@7
+   60 Logic: LVal tLT . LVal $@13
 
-    tLPAR  décalage et aller à l'état 101
-    tNB    décalage et aller à l'état 70
-    tID    décalage et aller à l'état 71
+    tLPAR  décalage et aller à l'état 99
+    tNB    décalage et aller à l'état 68
+    tID    décalage et aller à l'état 69
 
-    $défaut  réduction par utilisation de la règle 36 (Val)
+    $défaut  réduction par utilisation de la règle 41 (Val)
 
-    Val   aller à l'état 102
-    LVal  aller à l'état 130
-    Call  aller à l'état 73
+    Val        aller à l'état 100
+    Operation  aller à l'état 71
+    LVal       aller à l'état 137
+    Call       aller à l'état 72
 
 
 État 120
 
-   55 Logic: LVal tLT . LVal $@8
+   62 Logic: LVal tGT . LVal $@14
 
-    tLPAR  décalage et aller à l'état 101
-    tNB    décalage et aller à l'état 70
-    tID    décalage et aller à l'état 71
+    tLPAR  décalage et aller à l'état 99
+    tNB    décalage et aller à l'état 68
+    tID    décalage et aller à l'état 69
 
-    $défaut  réduction par utilisation de la règle 36 (Val)
+    $défaut  réduction par utilisation de la règle 41 (Val)
 
-    Val   aller à l'état 102
-    LVal  aller à l'état 131
-    Call  aller à l'état 73
+    Val        aller à l'état 100
+    Operation  aller à l'état 71
+    LVal       aller à l'état 138
+    Call       aller à l'état 72
 
 
 État 121
 
-   57 Logic: LVal tGT . LVal $@9
+   64 Logic: LVal tNE . LVal $@15
 
-    tLPAR  décalage et aller à l'état 101
-    tNB    décalage et aller à l'état 70
-    tID    décalage et aller à l'état 71
+    tLPAR  décalage et aller à l'état 99
+    tNB    décalage et aller à l'état 68
+    tID    décalage et aller à l'état 69
 
-    $défaut  réduction par utilisation de la règle 36 (Val)
+    $défaut  réduction par utilisation de la règle 41 (Val)
 
-    Val   aller à l'état 102
-    LVal  aller à l'état 132
-    Call  aller à l'état 73
+    Val        aller à l'état 100
+    Operation  aller à l'état 71
+    LVal       aller à l'état 139
+    Call       aller à l'état 72
 
 
 État 122
 
-   59 Logic: LVal tNE . LVal $@10
+   66 Logic: LVal tGE . LVal $@16
 
-    tLPAR  décalage et aller à l'état 101
-    tNB    décalage et aller à l'état 70
-    tID    décalage et aller à l'état 71
+    tLPAR  décalage et aller à l'état 99
+    tNB    décalage et aller à l'état 68
+    tID    décalage et aller à l'état 69
 
-    $défaut  réduction par utilisation de la règle 36 (Val)
+    $défaut  réduction par utilisation de la règle 41 (Val)
 
-    Val   aller à l'état 102
-    LVal  aller à l'état 133
-    Call  aller à l'état 73
+    Val        aller à l'état 100
+    Operation  aller à l'état 71
+    LVal       aller à l'état 140
+    Call       aller à l'état 72
 
 
 État 123
 
-   61 Logic: LVal tGE . LVal $@11
+   68 Logic: LVal tLE . LVal $@17
 
-    tLPAR  décalage et aller à l'état 101
-    tNB    décalage et aller à l'état 70
-    tID    décalage et aller à l'état 71
+    tLPAR  décalage et aller à l'état 99
+    tNB    décalage et aller à l'état 68
+    tID    décalage et aller à l'état 69
 
-    $défaut  réduction par utilisation de la règle 36 (Val)
+    $défaut  réduction par utilisation de la règle 41 (Val)
 
-    Val   aller à l'état 102
-    LVal  aller à l'état 134
-    Call  aller à l'état 73
+    Val        aller à l'état 100
+    Operation  aller à l'état 71
+    LVal       aller à l'état 141
+    Call       aller à l'état 72
 
 
 État 124
 
-   63 Logic: LVal tLE . LVal $@12
+   70 If: tIF tLPAR Logic tRPAR . $@18 BodyCond Else
 
-    tLPAR  décalage et aller à l'état 101
-    tNB    décalage et aller à l'état 70
-    tID    décalage et aller à l'état 71
+    $défaut  réduction par utilisation de la règle 69 ($@18)
 
-    $défaut  réduction par utilisation de la règle 36 (Val)
-
-    Val   aller à l'état 102
-    LVal  aller à l'état 135
-    Call  aller à l'état 73
+    $@18  aller à l'état 142
 
 
 État 125
 
-   65 If: tIF tLPAR Logic tRPAR . $@13 BodyCond Else
+   75 While: tWHILE tLPAR LVal tRPAR . $@20 BodyCond
 
-    $défaut  réduction par utilisation de la règle 64 ($@13)
+    $défaut  réduction par utilisation de la règle 74 ($@20)
 
-    $@13  aller à l'état 136
+    $@20  aller à l'état 143
 
 
 État 126
 
-   70 While: tWHILE tLPAR LVal tRPAR . $@15 BodyCond
+   20 Args: tINT tID tCOMMA $@6 Args .
 
-    $défaut  réduction par utilisation de la règle 69 ($@15)
-
-    $@15  aller à l'état 137
+    $défaut  réduction par utilisation de la règle 20 (Args)
 
 
 État 127
 
-    9 Main: tINT tMain tLPAR tRPAR tLBRACE Body Return tSEMI tRBRACE .
+   15 Main: tVOID $@4 tMain $@5 incr_prof tLPAR tRPAR tLBRACE Body . tRBRACE
 
-    $défaut  réduction par utilisation de la règle 9 (Main)
+    tRBRACE  décalage et aller à l'état 144
 
 
 État 128
 
-   74 Return: tRETURN tLPAR Val tRPAR .
+   47 Operation: Val . tADD Val $@8
+   49          | Val . tMUL Val $@9
+   51          | Val . tDIV Val $@10
+   53          | Val . tSUB Val $@11
+   79 Return: tRETURN tLPAR Val . tRPAR
 
-    $défaut  réduction par utilisation de la règle 74 (Return)
+    tRPAR  décalage et aller à l'état 145
+    tADD   décalage et aller à l'état 91
+    tMUL   décalage et aller à l'état 92
+    tDIV   décalage et aller à l'état 93
+    tSUB   décalage et aller à l'état 94
 
 
 État 129
 
-   50 LVal: tLPAR Val tRPAR .
+   12 Main: tINT tMain tLPAR tRPAR tLBRACE Body Return tSEMI tRBRACE .
 
-    $défaut  réduction par utilisation de la règle 50 (LVal)
+    $défaut  réduction par utilisation de la règle 12 (Main)
 
 
 État 130
 
-   53 Logic: LVal tEQ LVal . $@7
+    8 Fonction: tINT tID incr_prof $@1 Declaration tLBRACE Body Return $@2 . tSEMI tRBRACE
 
-    $défaut  réduction par utilisation de la règle 52 ($@7)
-
-    $@7  aller à l'état 138
+    tSEMI  décalage et aller à l'état 146
 
 
 État 131
 
-   55 Logic: LVal tLT LVal . $@8
+   47 Operation: Val tADD Val $@8 .
 
-    $défaut  réduction par utilisation de la règle 54 ($@8)
-
-    $@8  aller à l'état 139
+    $défaut  réduction par utilisation de la règle 47 (Operation)
 
 
 État 132
 
-   57 Logic: LVal tGT LVal . $@9
+   49 Operation: Val tMUL Val $@9 .
 
-    $défaut  réduction par utilisation de la règle 56 ($@9)
-
-    $@9  aller à l'état 140
+    $défaut  réduction par utilisation de la règle 49 (Operation)
 
 
 État 133
 
-   59 Logic: LVal tNE LVal . $@10
+   51 Operation: Val tDIV Val $@10 .
 
-    $défaut  réduction par utilisation de la règle 58 ($@10)
-
-    $@10  aller à l'état 141
+    $défaut  réduction par utilisation de la règle 51 (Operation)
 
 
 État 134
 
-   61 Logic: LVal tGE LVal . $@11
+   53 Operation: Val tSUB Val $@11 .
 
-    $défaut  réduction par utilisation de la règle 60 ($@11)
-
-    $@11  aller à l'état 142
+    $défaut  réduction par utilisation de la règle 53 (Operation)
 
 
 État 135
 
-   63 Logic: LVal tLE LVal . $@12
+   55 LVal: tLPAR Val tRPAR .
 
-    $défaut  réduction par utilisation de la règle 62 ($@12)
-
-    $@12  aller à l'état 143
+    $défaut  réduction par utilisation de la règle 55 (LVal)
 
 
 État 136
 
-   65 If: tIF tLPAR Logic tRPAR $@13 . BodyCond Else
+   58 Logic: LVal tEQ LVal . $@12
 
-    tLBRACE  décalage et aller à l'état 144
+    $défaut  réduction par utilisation de la règle 57 ($@12)
 
-    BodyCond  aller à l'état 145
+    $@12  aller à l'état 147
 
 
 État 137
 
-   70 While: tWHILE tLPAR LVal tRPAR $@15 . BodyCond
+   60 Logic: LVal tLT LVal . $@13
 
-    tLBRACE  décalage et aller à l'état 144
+    $défaut  réduction par utilisation de la règle 59 ($@13)
 
-    BodyCond  aller à l'état 146
+    $@13  aller à l'état 148
 
 
 État 138
 
-   53 Logic: LVal tEQ LVal $@7 .
+   62 Logic: LVal tGT LVal . $@14
 
-    $défaut  réduction par utilisation de la règle 53 (Logic)
+    $défaut  réduction par utilisation de la règle 61 ($@14)
+
+    $@14  aller à l'état 149
 
 
 État 139
 
-   55 Logic: LVal tLT LVal $@8 .
+   64 Logic: LVal tNE LVal . $@15
 
-    $défaut  réduction par utilisation de la règle 55 (Logic)
+    $défaut  réduction par utilisation de la règle 63 ($@15)
+
+    $@15  aller à l'état 150
 
 
 État 140
 
-   57 Logic: LVal tGT LVal $@9 .
+   66 Logic: LVal tGE LVal . $@16
 
-    $défaut  réduction par utilisation de la règle 57 (Logic)
+    $défaut  réduction par utilisation de la règle 65 ($@16)
+
+    $@16  aller à l'état 151
 
 
 État 141
 
-   59 Logic: LVal tNE LVal $@10 .
+   68 Logic: LVal tLE LVal . $@17
 
-    $défaut  réduction par utilisation de la règle 59 (Logic)
+    $défaut  réduction par utilisation de la règle 67 ($@17)
+
+    $@17  aller à l'état 152
 
 
 État 142
 
-   61 Logic: LVal tGE LVal $@11 .
+   70 If: tIF tLPAR Logic tRPAR $@18 . BodyCond Else
 
-    $défaut  réduction par utilisation de la règle 61 (Logic)
+    tLBRACE  décalage et aller à l'état 153
+
+    BodyCond  aller à l'état 154
 
 
 État 143
 
-   63 Logic: LVal tLE LVal $@12 .
+   75 While: tWHILE tLPAR LVal tRPAR $@20 . BodyCond
 
-    $défaut  réduction par utilisation de la règle 63 (Logic)
+    tLBRACE  décalage et aller à l'état 153
+
+    BodyCond  aller à l'état 155
 
 
 État 144
 
-   71 BodyCond: tLBRACE . Body tRBRACE
+   15 Main: tVOID $@4 tMain $@5 incr_prof tLPAR tRPAR tLBRACE Body tRBRACE .
 
-    tPRINT  décalage et aller à l'état 29
-    tCONST  décalage et aller à l'état 30
-    tINT    décalage et aller à l'état 31
-    tID     décalage et aller à l'état 32
-
-    tRBRACE   réduction par utilisation de la règle 16 (Body)
-    $défaut  réduction par utilisation de la règle 26 (incr_prof)
-
-    Body        aller à l'état 147
-    BodyDec     aller à l'état 34
-    BodyInstru  aller à l'état 35
-    incr_prof   aller à l'état 36
-    Printf      aller à l'état 37
-    Affect      aller à l'état 38
-    Call        aller à l'état 39
+    $défaut  réduction par utilisation de la règle 15 (Main)
 
 
 État 145
 
-   65 If: tIF tLPAR Logic tRPAR $@13 BodyCond . Else
+   79 Return: tRETURN tLPAR Val tRPAR .
 
-    tELSE  décalage et aller à l'état 148
-
-    $défaut  réduction par utilisation de la règle 66 (Else)
-
-    Else  aller à l'état 149
+    $défaut  réduction par utilisation de la règle 79 (Return)
 
 
 État 146
 
-   70 While: tWHILE tLPAR LVal tRPAR $@15 BodyCond .
+    8 Fonction: tINT tID incr_prof $@1 Declaration tLBRACE Body Return $@2 tSEMI . tRBRACE
 
-    $défaut  réduction par utilisation de la règle 70 (While)
+    tRBRACE  décalage et aller à l'état 156
 
 
 État 147
 
-   71 BodyCond: tLBRACE Body . tRBRACE
+   58 Logic: LVal tEQ LVal $@12 .
 
-    tRBRACE  décalage et aller à l'état 150
+    $défaut  réduction par utilisation de la règle 58 (Logic)
 
 
 État 148
 
-   68 Else: tELSE . $@14 BodyCond
+   60 Logic: LVal tLT LVal $@13 .
 
-    $défaut  réduction par utilisation de la règle 67 ($@14)
-
-    $@14  aller à l'état 151
+    $défaut  réduction par utilisation de la règle 60 (Logic)
 
 
 État 149
 
-   65 If: tIF tLPAR Logic tRPAR $@13 BodyCond Else .
+   62 Logic: LVal tGT LVal $@14 .
 
-    $défaut  réduction par utilisation de la règle 65 (If)
+    $défaut  réduction par utilisation de la règle 62 (Logic)
 
 
 État 150
 
-   71 BodyCond: tLBRACE Body tRBRACE .
+   64 Logic: LVal tNE LVal $@15 .
 
-    $défaut  réduction par utilisation de la règle 71 (BodyCond)
+    $défaut  réduction par utilisation de la règle 64 (Logic)
 
 
 État 151
 
-   68 Else: tELSE $@14 . BodyCond
+   66 Logic: LVal tGE LVal $@16 .
 
-    tLBRACE  décalage et aller à l'état 144
-
-    BodyCond  aller à l'état 152
+    $défaut  réduction par utilisation de la règle 66 (Logic)
 
 
 État 152
 
-   68 Else: tELSE $@14 BodyCond .
+   68 Logic: LVal tLE LVal $@17 .
 
-    $défaut  réduction par utilisation de la règle 68 (Else)
+    $défaut  réduction par utilisation de la règle 68 (Logic)
+
+
+État 153
+
+   76 BodyCond: tLBRACE . Body tRBRACE
+
+    tPRINT  décalage et aller à l'état 27
+    tCONST  décalage et aller à l'état 28
+    tINT    décalage et aller à l'état 29
+    tID     décalage et aller à l'état 30
+
+    tRBRACE   réduction par utilisation de la règle 21 (Body)
+    $défaut  réduction par utilisation de la règle 31 (incr_prof)
+
+    Body        aller à l'état 157
+    BodyDec     aller à l'état 32
+    BodyInstru  aller à l'état 33
+    incr_prof   aller à l'état 34
+    Printf      aller à l'état 35
+    Affect      aller à l'état 36
+    Call        aller à l'état 37
+
+
+État 154
+
+   70 If: tIF tLPAR Logic tRPAR $@18 BodyCond . Else
+
+    tELSE  décalage et aller à l'état 158
+
+    $défaut  réduction par utilisation de la règle 71 (Else)
+
+    Else  aller à l'état 159
+
+
+État 155
+
+   75 While: tWHILE tLPAR LVal tRPAR $@20 BodyCond .
+
+    $défaut  réduction par utilisation de la règle 75 (While)
+
+
+État 156
+
+    8 Fonction: tINT tID incr_prof $@1 Declaration tLBRACE Body Return $@2 tSEMI tRBRACE .
+
+    $défaut  réduction par utilisation de la règle 8 (Fonction)
+
+
+État 157
+
+   76 BodyCond: tLBRACE Body . tRBRACE
+
+    tRBRACE  décalage et aller à l'état 160
+
+
+État 158
+
+   73 Else: tELSE . $@19 BodyCond
+
+    $défaut  réduction par utilisation de la règle 72 ($@19)
+
+    $@19  aller à l'état 161
+
+
+État 159
+
+   70 If: tIF tLPAR Logic tRPAR $@18 BodyCond Else .
+
+    $défaut  réduction par utilisation de la règle 70 (If)
+
+
+État 160
+
+   76 BodyCond: tLBRACE Body tRBRACE .
+
+    $défaut  réduction par utilisation de la règle 76 (BodyCond)
+
+
+État 161
+
+   73 Else: tELSE $@19 . BodyCond
+
+    tLBRACE  décalage et aller à l'état 153
+
+    BodyCond  aller à l'état 162
+
+
+État 162
+
+   73 Else: tELSE $@19 BodyCond .
+
+    $défaut  réduction par utilisation de la règle 73 (Else)

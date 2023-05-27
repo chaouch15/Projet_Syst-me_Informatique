@@ -21,7 +21,6 @@ int insert_TI(char id[4], int addr_dest, int addr1, int addr2){
     TI.nbr_instrus++;
     strcpy(TI.tab_instrus[TI.nbr_instrus].id,id);
     TI.tab_instrus[TI.nbr_instrus].addr_dest = addr_dest;
-    printf("aadddrrr1 : %d \n",addr_dest);
     TI.tab_instrus[TI.nbr_instrus].addr1 = addr1;
     TI.tab_instrus[TI.nbr_instrus].addr2 = addr2;
     return TI.nbr_instrus;
@@ -127,8 +126,8 @@ void printf_TI(char variable[4]){
 // FONCTION ARITHMETIQUE
 
 void add_TI(){
-    int addr = get_addr_tmp_pile() ; // get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
-    int stl_addr = addr-1;
+    int addr = get_addr_tmp_pile()+1 ; // get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
+    int stl_addr = addr -1;
     pop(); //free_last_tmp_Tab();
     insert_TI("ADD", stl_addr, stl_addr, addr);
 }
@@ -156,11 +155,17 @@ void div_TI(){
 }
 
 void nb_TI(int nvid,int profondeur){
-   
-    int addr = push_tmp(profondeur) ;// insert_tmp_Tab();
-    
+    int addr = push_tmp(profondeur) ;
+     printf("gggggggggggg");
+     // insert_tmp_Tab();
     insert_TI("AFC", addr, nvid, -1);
    
+}
+void affect_TI(char variable[4]){
+    int var_addr =  get_addr_pile(variable) +1 ; // get_adresse_Tab(variable);
+    int tmp_addr = get_addr_tmp_pile()+1 ; // get_last_tmp_addr_Tab();
+    pop(); //free_last_tmp_Tab();
+    insert_TI("COP", var_addr, tmp_addr, -1);
 }
 
 void var_TI(char variable[4], int profondeur){
@@ -197,7 +202,6 @@ void condi_lt_TI(){
    
     int addr = get_addr_tmp_pile() ; // get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
     int stl_addr = addr-1;
-   printf("llllllltttttttttt %d \n",stl_addr );
     pop(); //free_last_tmp_Tab();
     insert_TI("LT",stl_addr, stl_addr, addr);
 }
@@ -220,16 +224,16 @@ void condi_le_TI(){
 
 void decla_var_TI(char variable[4] , int profondeur){
    // insert_Tab(variable);
-
    push(variable , profondeur);
     
 }
 
-// AFFECTATION
 
-void affect_TI(char variable[4]){
-    int addr =  get_addr_pile(variable) ; // get_adresse_Tab(variable);
-    int tmp_addr = get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
-    pop(); //free_last_tmp_Tab();
-    insert_TI("COP", addr, tmp_addr, -1);
+void PUSH(char variable[4] , int profondeur){
+   // insert_Tab(variable);
+   push(variable , profondeur);
+    
 }
+
+
+

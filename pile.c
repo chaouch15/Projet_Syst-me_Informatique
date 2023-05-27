@@ -5,13 +5,7 @@
 #include <stdbool.h>
 #include "pile.h"
 
-
-
-int la_profondeur;
-int addr;
-int return_addr;
-
-void pile_init(void){
+void pile_init(){
     printf("Stack INITIALISATION \n");
     la_profondeur = 0;
     addr=0;
@@ -119,13 +113,14 @@ void printElement (Element *actuel){
 }
 
 int push(char* nvid, int profondeur ){
-    
+    printf(nvid);
     struct Element *nouvelle_pile = malloc(sizeof(*nouvelle_pile));
     nouvelle_pile->id = nvid;
     nouvelle_pile -> tmp = false;
     nouvelle_pile -> profondeur = profondeur;
     nouvelle_pile->addresse= addr; 
-    printElement(nouvelle_pile);
+    
+   printElement(nouvelle_pile);printf(" la bbbbbbb !!!%d\n", la_profondeur);
     if (nouvelle_pile != NULL){
         nouvelle_pile->precedent = pile;
         pile = nouvelle_pile;
@@ -135,15 +130,38 @@ int push(char* nvid, int profondeur ){
     }
    
    
-   // printf(" la profondeur %d\n", la_profondeur);
+   printf(" la profondeur !!!%d\n", la_profondeur);
      
     addr+=1;
-    return (addr-1);
+    return (addr);
+   }
+
+   int push_main( int profondeur ){
+   
+    struct Element *nouvelle_pile = malloc(sizeof(*nouvelle_pile));
+    nouvelle_pile->id = "main";
+    nouvelle_pile -> tmp = false;
+    nouvelle_pile -> profondeur = profondeur;
+    nouvelle_pile->addresse= addr; 
+    
+   printElement(nouvelle_pile);printf(" la bbbbbbb !!!%d\n", la_profondeur);
+    if (nouvelle_pile != NULL){
+        nouvelle_pile->precedent = pile;
+        pile = nouvelle_pile;
+    }else{
+       nouvelle_pile->precedent = NULL;
+        pile = nouvelle_pile;
+    }
+   
+   
+   printf(" la profondeur !!!%d\n", la_profondeur);
+     
+    addr+=1;
+    return (addr);
    }
 
 
 int push_tmp(int profondeur) {
-    
     
     struct Element *nouvelle_pile = malloc(sizeof(*nouvelle_pile));
     nouvelle_pile->id = "tmp-name";
@@ -158,12 +176,13 @@ int push_tmp(int profondeur) {
          nouvelle_pile->precedent = NULL;
         pile = nouvelle_pile;
     }
-   
+    printf("begining push_tmp");
     printf(" la profondeur %d\n", la_profondeur);
     
     addr+=1;
     
-    return (addr-1);
+   
+    return (addr);
    }
 
 
@@ -222,22 +241,23 @@ void afficherPile(){
     printf("\n");
 }
 
-void save_addr_func () {
+void save_addr_main () {
      printf("I am saving return addr");
     return_addr = addr; 
 
 }
-
-void return_to_addr_func (){
-  Element*  elmt = malloc(sizeof(*elmt));
+/*
+void return_to_addr_main (){
+   printf("addr %d ::::::::::", return_addr); Element*  elmt = malloc(sizeof(*elmt));
   elmt = pop();
   printElement(elmt);
+
   
     while (elmt->addresse != return_addr){
         elmt = pop();
          printElement(elmt);
          printf("addddddddr: %d \n",return_addr);
-    }
+    
    
     if (elmt != NULL){
         elmt->precedent = pile;
@@ -246,16 +266,16 @@ void return_to_addr_func (){
        elmt->precedent = NULL;
         pile = elmt;
     }
-   
+    }
      
     addr= return_addr;
-   
+   push(elmt->id, la_profondeur);
 }
 
-
-
+*/
 
 /*
+
 
 
 int main(){

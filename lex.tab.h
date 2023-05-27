@@ -79,11 +79,10 @@ extern int yydebug;
     tNE = 285,
     tGE = 286,
     tLE = 287,
-    tOP = 288,
-    tNB = 289,
-    tVOID = 290,
-    tINT = 291,
-    tID = 292
+    tNB = 288,
+    tVOID = 289,
+    tINT = 290,
+    tID = 291
   };
 #endif
 
@@ -91,12 +90,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 25 "lex.y"
+#line 28 "lex.y"
 
     int num;
     char* c;
 
-#line 100 "lex.tab.h"
+#line 99 "lex.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

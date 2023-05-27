@@ -16,8 +16,11 @@ struct Element
     Element *precedent;
 };
 
+int la_profondeur;
+int addr;
+int return_addr;
 struct Element *pile;
-void pile_init(void);
+void pile_init();
 int get_profondeur();
 int get_adress(Element *elmt );
 struct Element * get_haut_pile();
@@ -29,8 +32,9 @@ int push(char* nvid, int profondeur );
 //void afficherPile()
 Element* pop();
 int push_tmp(int profondeur) ;
-void save_addr_func ();
-void return_to_addr_func ();
+void save_addr_main ();
+int push_main(int la_profondeur);
+void return_to_addr_main ();
 
 
 
