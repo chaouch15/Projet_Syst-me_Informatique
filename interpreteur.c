@@ -9,6 +9,7 @@
 
 int TI_reg[1024];
 int TI_code[1024][4];
+int size=0;
 
 void read_file(){
     FILE *file;
@@ -53,23 +54,23 @@ void interpreteuree(){
     while(TI_code[index_code][0] != 0){
         switch (TI_code[index_code][0]) {
            case 1:
-                TI_reg[TI_code[index_code][1]] = TI_code[index_code][2] + TI_code[index_code][3]   ;
+             TI_reg[TI_code[index_code][1]] = TI_reg[TI_code[index_code][2]] + TI_reg[TI_code[index_code][3] ]  ;
                break;
            case 2:
-              TI_reg[TI_code[index_code][1]] = TI_code[index_code][2] * TI_code[index_code][3] ;
+              TI_reg[TI_code[index_code][1]] =TI_reg[TI_code[index_code][2]] * TI_reg[TI_code[index_code][3] ]  ;
 
                break;
            case 3:
-              TI_reg[TI_code[index_code][1]] = TI_code[index_code][2] - TI_code[index_code][3] ;
+              TI_reg[TI_code[index_code][1]] = TI_reg[TI_code[index_code][2]] - TI_reg[TI_code[index_code][3] ]  ;
                break;
            case 4:
-               TI_reg[TI_code[index_code][1]] = TI_code[index_code][2] / TI_code[index_code][3] ;
+               TI_reg[TI_code[index_code][1]] = TI_reg[TI_code[index_code][2]] / TI_reg[TI_code[index_code][3] ]  ;
                break;
            case 5:
-               TI_reg[TI_code[index_code][1]] = TI_code[index_code][2]  ;
+               TI_reg[TI_code[index_code][1]] = TI_reg[TI_code[index_code][2] ] ;
                break;
            case 6:
-                TI_reg[TI_code[index_code][1]] = TI_code[index_code][2]  ;
+           TI_reg[TI_code[index_code][1]] = TI_code[index_code][2]  ;
                break;
            case 7:
            index_code =  TI_reg[TI_code[index_code][1]]  ;
@@ -95,6 +96,14 @@ void interpreteuree(){
                 break;
 
         }
+        
+        printf("-----%d-----%d \n",index_code,TI_code[index_code][0]);
         index_code++;}
+
+    int i ;
+          for(i=0; i<10; i++){
+            printf("REG %d : %d  \n", i, TI_reg[i]);
+        
+         }
         printf("finished");}
   

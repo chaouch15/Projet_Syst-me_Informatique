@@ -1,8 +1,5 @@
-int f(int b){
-return b + 2;
-}
-int g(int b){
-  int c = f(2);
+
+int g(int b){ 
 return b + 2;
 }
 
