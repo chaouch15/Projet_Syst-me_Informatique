@@ -9,7 +9,10 @@ table_instru TI;
 
 void init_TI(){
     printf("Instruction Table INITIALISATION \n");
-    TI.nbr_instrus = -1;
+    int line = insert_TI("JMP  ",-1,-1,-1); 
+    insert_tjump(line); 
+    TI.nbr_instrus = 0;
+   
 
 }
 
@@ -47,9 +50,8 @@ void actu_jump(int from, int to){
 
 int convert_instru (char instru[4] ){
      if  (strcmp(instru,"NOP" )== 0){
-        return 00;}
-       else if  (strcmp(instru,"JMF" )== 0){
-        return 8;}else if (strcmp(instru, "ADD")==0){
+        return 0;}
+     else if (strcmp(instru, "ADD")==0){
         return 1;
         }else if (strcmp(instru, "MUL" ) == 0){
         return 2;
@@ -63,7 +65,8 @@ int convert_instru (char instru[4] ){
         return 6;}
          else if  (strcmp(instru, "JMP" )== 0){
         return 7;}
-       
+          else if  (strcmp(instru,"JMF" )== 0){
+        return 8;}
         else if  (strcmp(instru, "LT")== 0){
         return 9;}
         else if  (strcmp(instru, "GT" )== 0){
@@ -72,6 +75,12 @@ int convert_instru (char instru[4] ){
         return 11;}
         else if  (strcmp(instru, "PRI" )== 0){
         return 12;} 
+         else if  (strcmp(instru, "PUSH" )== 0){
+        return 13;} 
+         else if  (strcmp(instru, "POP" )== 0){
+        return 14;} 
+         else if  (strcmp(instru, "CALL" )== 0){
+        return 15;} 
         else return -1;
     
      
@@ -97,7 +106,7 @@ void print_TI(){
 void create_file_TI(){    
     int code;
     FILE *file;
-    file = fopen("instru.txt", "w");
+    file = fopen("instru.txt", "wr");
     int i;
     for (i = 0; i < TI.nbr_instrus+1; i++){
      //   fprintf(file, "%s ", TI.tab_instrus[i].inst);
@@ -109,7 +118,7 @@ void create_file_TI(){
         fprintf(file,"\n");
     }
    
-    //fclose(file);
+    fclose(file);
     printf("finished creating file instructions \n");
    }
   
@@ -163,10 +172,12 @@ void nb_TI(int nvid,int profondeur){
 }
 void affect_TI(char variable[4]){
     int var_addr =  get_addr_pile(variable) +1 ; // get_adresse_Tab(variable);
-    int tmp_addr = get_addr_tmp_pile()+1 ; // get_last_tmp_addr_Tab();
+    int tmp_addr = get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
     pop(); //free_last_tmp_Tab();
     insert_TI("COP", var_addr, tmp_addr, -1);
 }
+
+
 
 void var_TI(char variable[4], int profondeur){
     int var_addr = get_addr_pile(variable);
@@ -229,7 +240,7 @@ void decla_var_TI(char variable[4] , int profondeur){
 }
 
 void start_main( int la_profondeur){
-    int addr = push_main( la_profondeur);
+    int addr = push_addr_return(la_profondeur);
     insert_TI("PUSH",addr, -1, -1);
 } 
 

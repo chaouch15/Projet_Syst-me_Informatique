@@ -6,6 +6,7 @@
 #include "Jump_manager.h"
 #include "interpreteur.h"
 #include "Function_manager.h"
+#include "cross_compiler.h"
 
 int yylex (void);
 void yyerror (const char *);
@@ -48,16 +49,17 @@ Statement:
     |tINT tMain tLBRACE Body Return tSEMI tRBRACE  {insert_TI("NOP",0,0,0);}
 
 */
-Program : Statement;
+ //save_for_mane : %empty 
+Program :  Statement ;
 
-Statement : Statement Main
+Statement : Statement   Main
         | Fonction ;
 		| Main
 		| Statement Fonction 
 		;
 
-Fonction : tINT tID incr_prof{ decla_var_TI($<c>2, la_profondeur); int line = insert_TI("JMP",-1,-1,-1);insert_tjump(line); $<num>1 = get_nbr_instrus_TI() ;printf("Function done"); } Declaration tLBRACE   Body  Return {affect_TI ($<c>2);insert_TI("RET",0,0,0);}tSEMI tRBRACE { actu_jump(pop_tjump(), get_nbr_instrus_TI()+2);insert_TI("RET",0,0,0);/*  insert_TI("JMP",-1,-1,-1); */Add_Func($2, $1, get_nbr_instrus_TI());}
-         | tVOID tID { int line = insert_TI("JMP",-1,-1,-1); insert_tjump(line); $<num>1 = get_nbr_instrus_TI() + 1;} Declaration tLBRACE       Body  tRBRACE { actu_jump(pop_tjump(), get_nbr_instrus_TI()+2);  insert_TI("JMP",-1,-1,-1); Add_Func($2, $1, get_nbr_instrus_TI());}
+Fonction : tINT tID incr_prof { decla_var_TI($<c>2, la_profondeur); /*int line = insert_TI("JMP",-1,-1,-1);insert_tjump(line); $<num>1 = get_nbr_instrus_TI() ;*/printf("Function done"); } Declaration tLBRACE   Body  Return {affect_TI ($<c>2);insert_TI("RET",0,0,0);}tSEMI tRBRACE { /*actu_jump(pop_tjump(), get_nbr_instrus_TI()+2);insert_TI("RET",0,0,0);/*  insert_TI("JMP",-1,-1,-1); */Add_Func($2,  search($<c>2), get_nbr_instrus_TI());}
+         | tVOID tID{$<num>1 = get_nbr_instrus_TI() + 1;printf("hhhhhh %d", $<num>1 );} Declaration tLBRACE  Body  tRBRACE{Add_Func($2, $1, get_nbr_instrus_TI());}
        
        
        ;
@@ -71,9 +73,9 @@ Declaration:
      tLPAR Args tRPAR 
 ;
 Main : 
-        tINT tMain tLPAR tRPAR tLBRACE Body Return tSEMI tRBRACE {insert_TI("RET",0,0,0);}
-    | tVOID  {printf("START MAIN");}tMain {start_main( la_profondeur);} incr_prof tLPAR tRPAR tLBRACE Body tRBRACE {insert_TI("NOP",0,0,0);}
-    | tMain tLPAR tRPAR tLBRACE Body tRBRACE {insert_TI("NOP",0,0,0);}
+        tINT tMain { actu_jump(pop_tjump(), get_nbr_instrus_TI()+2); } tLPAR tRPAR tLBRACE Body Return tSEMI tRBRACE {insert_TI("RET",0,0,0);}
+    | tVOID  {printf("START MAIN");}tMain {actu_jump(pop_tjump(), get_nbr_instrus_TI()+2);  } incr_prof tLPAR tRPAR tLBRACE Body tRBRACE {insert_TI("NOP",0,0,0);}
+    | tMain { actu_jump(pop_tjump(), get_nbr_instrus_TI()+2);  } tLPAR tRPAR tLBRACE Body tRBRACE {insert_TI("NOP",0,0,0);}
     ;
 
 
@@ -124,9 +126,16 @@ Initialisationc :
     | Affect
     ;
 
-Initialisation :
-      tID   tASSIGN {save_addr_return() ;} Call    
-    | tID tASSIGN { decla_var_TI($<c>1, la_profondeur);} Val  {affect_TI ($1); }
+Call:
+
+    tID tLPAR  {push_addr_return(la_profondeur);}Parametre tRPAR {insert_TI("PUSH",search("returnADDR"),-1,-1);insert_TI("CALL",search($<c>1),-1,-1); insert_TI("POP",search("returnADDR"),-1,-1);} 
+    //tID tLPAR  {start_main(la_profondeur); push($<c>1,la_profondeur);}Parametre tRPAR {insert_TI("CALL",search($<c>1),-1,-1); insert_TI("POP",get_addr_return(),-1,-1);} 
+    ;
+
+Initialisation : 
+
+     tID   tASSIGN {save_addr_return();  decla_var_TI($<c>1, la_profondeur); } Call  {affect_TI ($1); }
+     | tID tASSIGN { decla_var_TI($<c>1, la_profondeur);} Val  {affect_TI ($1); }
     | Initialisation tCOMMA Initialisation  
     |  tID  {decla_var_TI($<c>1, la_profondeur);} 
     ;
@@ -140,9 +149,11 @@ Affect :
 
 Val :  
         %empty
+  //  |Call   
+  //  |   {save_addr_return() ;} tID tLPAR  {insert_TI("CALL",search($<c>1),-1,-1); }Parametre tRPAR {insert_TI("POP",get_addr_return(),-1,-1);}
     | tID {var_TI($<c>1, la_profondeur);}/* { push($<c>1, int_t,la_profondeur);}*/
     | tNB {nb_TI($<num>1, la_profondeur);}/*{ push("tmp", int_t,la_profondeur);}*/
-    |  Operation 
+    |  Operation
    
     ;
 
@@ -223,10 +234,14 @@ BodyCond :
 
         ;
 
-Parametre  :  
-         Val
-    |Val tCOMMA Parametre
-    ;
+Parametre  : 
+Val|Val tCOMMA Parametre ;
+ /*    %empty
+    | tID {var_TI($<c>1, la_profondeur);} { push($<c>1, int_t,la_profondeur);}
+    | tNB {nb_TI($<num>1, la_profondeur);}/*{ push("tmp", int_t,la_profondeur);}
+    |  Operation 
+    |Parametre tCOMMA Parametre
+    ;*/
 
 Return :
     tRETURN tLPAR Val tRPAR  
@@ -234,9 +249,6 @@ Return :
     ;
 
 
-Call:
-    tID tLPAR  {insert_TI("CALL",search($<c>1),-1,-1); }Parametre tRPAR
-    ;
 
  
 
@@ -260,8 +272,8 @@ int main(void) {
    
     create_file_TI();
 
-   // printf("-------");
-   // interpreteuree();
-
+   // 
+    interpreteuree();printf("-------");
+   cross();
     return 0;
 }

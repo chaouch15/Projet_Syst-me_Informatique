@@ -1,5 +1,11 @@
-int f(int a) {
-  return a + 2;
+int f(int b){
+return b + 2;
 }
+int g(int b){
+  int c = f(2);
+return b + 2;
+}
+
 void main() {
-  int b = f(2);}
+  int a = g(2);
+}

@@ -136,10 +136,10 @@ int push(char* nvid, int profondeur ){
     return (addr);
    }
 
-   int push_main( int profondeur ){
-   
+   int push_addr_return( int profondeur ){
+    addr+=1;
     struct Element *nouvelle_pile = malloc(sizeof(*nouvelle_pile));
-    nouvelle_pile->id = "main";
+    nouvelle_pile->id = "returnADDR";
     nouvelle_pile -> tmp = false;
     nouvelle_pile -> profondeur = profondeur;
     nouvelle_pile->addresse= addr; 
@@ -156,7 +156,7 @@ int push(char* nvid, int profondeur ){
    
    printf(" la profondeur !!!%d\n", la_profondeur);
      
-    addr+=1;
+   
     return (addr);
    }
 

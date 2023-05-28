@@ -4,44 +4,33 @@
 #include<stdio.h>
 #include"interpreteur.h"
 
+
 #define MAX_LINE_LENGTH 1000
 
 int TI_reg[1024];
 int TI_code[1024][4];
-
 
 void read_file(){
     FILE *file;
     char line [100];
     int i = 0;
     file = fopen("instru.txt", "r");
-   // printf("file opened");
     if (file == NULL){
         printf("ERROR : FILE EMPTY ");
         exit(1);
     } 
     while (fgets(line, sizeof(line), file)) {
-         printf("ok" );
+         //printf("ok" );
         
         if (sscanf(line, "%d %d %d %d",&TI_code[i][0], &TI_code[i][1], &TI_code[i][2], &TI_code[i][3]) != 4) {
             printf("Error parsing line: %s", line);
             continue;
         }
-
-     
-       
-        // Increment the row index
-        
-       
     i++;
-   
-    // Check if the array is full
     if (i >= 1024) {
         printf("Error: array is full.\n");
         break;
     }
-
-
 }
 
 /*while(TI_code[index_code][0] != 0){
@@ -49,7 +38,6 @@ void read_file(){
     index_code++ ;}*/
 fclose(file);
 //printf("file closed");
-
 }
 
 void interpreteuree(){
@@ -60,7 +48,8 @@ void interpreteuree(){
    // int tab_int[100];
   //  int index_code = 0;
    // char inst[4];
-
+//for (int i = 0; i < 9; i++){
+ //printf("'''''''''''%d %d ",i,TI_code[i][1] );}
     while(TI_code[index_code][0] != 0){
         switch (TI_code[index_code][0]) {
            case 1:

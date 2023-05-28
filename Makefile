@@ -1,5 +1,5 @@
 
-OBJ : lex.tab.o lex.yy.o pile.o tab_instru.o interpreteur.o Function_manager.o Jump_manager.o
+OBJ : lex.tab.o lex.yy.o pile.o tab_instru.o interpreteur.o Function_manager.o Jump_manager.o cross_compiler.o
 
 all: lex
 %.o: %.c
@@ -14,7 +14,7 @@ lex.yy.c: lex.l lex.tab.h
 
 
 
-lex: lex.tab.o lex.yy.o pile.o tab_instru.o interpreteur.o Function_manager.o Jump_manager.o
+lex: lex.tab.o lex.yy.o pile.o tab_instru.o interpreteur.o Function_manager.o Jump_manager.o cross_compiler.o
 	gcc -o lex $^
 	
 	
@@ -23,4 +23,5 @@ clean:
 
 test: all
 	./lex < fichier.c
+	python cross.py
 
