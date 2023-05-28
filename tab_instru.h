@@ -14,7 +14,7 @@ typedef struct {
 } table_instru;
 
 
-
+char* strip_string(char instru[100]);
 int code_instru(char instru[4]);
 void init_TI();
 table_instru get_Tab_instrus();
@@ -42,3 +42,6 @@ void start_main( int la_profondeur);
 void decla_var_TI(char variable[4] , int profondeur);
 void affect_TI(char variable[4]);
 void jmf_body();
+void jmp_body();
+
+char *strstrip(char *s);

@@ -225,11 +225,13 @@ void print_stack(){
     if (pile == NULL)   {     exit(EXIT_FAILURE);   }
 
      Element *actuel = pile;
-     printf("ID               tmp             Pronfondeur                ADDRr\n");
+     printf("-------------------------STACK------------------------------------\n");
+         
+         
+     printf("ID                      tmp         Pronfondeur         ADDRr\n");
     while (actuel  != NULL){
        
-        printf("%s                  %d                 %d                    %d\n", actuel->id, actuel->tmp, actuel->profondeur, actuel->addresse);
-         printf("--------------------------------------------------\n");
+       printf("%s\t\t\t   %d\t\t %d\t\t %d\t\t\n", actuel->id, actuel->tmp, actuel->profondeur, actuel->addresse);
          
          actuel = actuel->precedent;
         

@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <ctype.h>
 
 #include "tab_instru.h"
 #include "pile.h"
@@ -44,7 +46,7 @@ void actu_jumf(int from, int to){
 
 //patch du JUMP
 void actu_jump(int from, int to){
-    TI.tab_instrus[from].addr_dest = to;
+    TI.tab_instrus[from].addr_dest = to - 1;
 }
 
 int convert_instru (char instru[4] ){
@@ -62,7 +64,7 @@ int convert_instru (char instru[4] ){
         return 5;}
          else if  (strcmp(instru, "AFC" )== 0){
         return 6;}
-         else if  (strcmp(instru, "JMP" )== 0){
+         else if  (strcmp(instru, "JMP " )== 0){
         return 7;}
           else if  (strcmp(instru,"JMF" )== 0){
         return 8;}
@@ -85,7 +87,48 @@ int convert_instru (char instru[4] ){
      
     
 }
+/*
+char *strstrip(char *s)
+{
+        size_t size;
+        char *end;
 
+        size = strlen(s);
+
+        if (!size)
+                return s;
+
+        end = s + size - 1;
+        while (end >= s && isspace(*end))
+                end--;
+        *(end + 1) = '\0';
+
+        while (*s && isspace(*s))
+                s++;
+  printf("-------mmmmmmmmmm -------------%s-----------------\n", s );
+     
+        return s;
+}
+
+
+char * strip_string(char str[100]){
+     
+    int i,j = 0;
+       char  *result[4];
+   //  for(i = 0; str[i] != " " ; ++i)
+     str = strstrip(str);
+     printf("------------------------ASM INSTRUCTIONS -------------%s-----------------\n", str );
+     
+        while (!( (str[i] >= 'A' && str[i] <= 'Z') || !isspace(str[i] ) ))
+        {result[j] = str[i];  printf("------------------------ASM INSTRUCTIONS -------------%s-----------------\n", result );
+    
+    i ++;
+    j++;
+        }
+   // }
+    return result;
+} 
+*/
 //print the table of instru
 void print_TI(){
     printf("------------------------ASM INSTRUCTIONS ------------------------------\n");
@@ -93,7 +136,7 @@ void print_TI(){
     int i;
     int code ;
     for(i=0; i<TI.nbr_instrus+1; i++){
-         code = convert_instru(TI.tab_instrus[i].id);
+                code = convert_instru(TI.tab_instrus[i].id);
 
         printf("%d\t  %s\t\t %d\t\t %d\t\t%d\t  %d\n", i, TI.tab_instrus[i].id, code , TI.tab_instrus[i].addr_dest, TI.tab_instrus[i].addr1, TI.tab_instrus[i].addr2);
     }
@@ -105,12 +148,16 @@ void print_TI(){
 void create_file_TI(){    
     int code;
     FILE *file;
-    file = fopen("instru.txt", "wr");
+    file = fopen("instru.txt", "rt");
     int i;
     for (i = 0; i < TI.nbr_instrus+1; i++){
-     //   fprintf(file, "%s ", TI.tab_instrus[i].inst);
+       char * re = TI.tab_instrus[i].id;
+     //  fprintf(file, "%s ", re);
+     //re = strip_string(TI.tab_instrus[i].id);
+   //  printf("-----------------%s",re);
+        // code = convert_instru(code);
          code = convert_instru(TI.tab_instrus[i].id);
-          fprintf(file, "%d ", code);
+          fprintf(file, "%d ",code);
         /*if(TI.tab_instrus[i].addr_dest != -1) */fprintf(file, "%d ",TI.tab_instrus[i].addr_dest); 
       /*  if(TI.tab_instrus[i].addr1 != -1)*/ fprintf(file, "%d ",TI.tab_instrus[i].addr1);
        /* if(TI.tab_instrus[i].addr2 != -1) */fprintf(file, "%d ",TI.tab_instrus[i].addr2);
@@ -130,49 +177,44 @@ void printf_TI(char variable[4]){
 }
 
 
-
-// FONCTION ARITHMETIQUE
-
 void add_TI(){
-    int addr = get_addr_tmp_pile(); // get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
+    int addr = get_addr_tmp_pile(); 
     int stl_addr = addr -1;
-    pop(); //free_last_tmp_Tab();
+    pop(); 
     insert_TI("ADD", stl_addr, stl_addr, addr);
 }
 
 void sub_TI(){
-    int addr = get_addr_tmp_pile() ; // get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
+    int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr-1;
-    pop(); //free_last_tmp_Tab();
+    pop(); 
    
     insert_TI("SUB", stl_addr, stl_addr, addr);
 }
 
 void mul_TI(){
-    int addr = get_addr_tmp_pile() ; // get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
+    int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr-1 ;
-    pop(); //free_last_tmp_Tab();
+    pop(); 
     insert_TI("MUL", stl_addr, stl_addr, addr);
 }
 
 void div_TI(){
-    int addr = get_addr_tmp_pile() ; // get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
+    int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr - 1;
-    pop(); //free_last_tmp_Tab();
+    pop(); 
     insert_TI("DIV", stl_addr, stl_addr, addr);
 }
 
 void nb_TI(int nvid,int profondeur){
     int addr = push_tmp(profondeur) - 1 ;
-   
-     // insert_tmp_Tab();
     insert_TI("AFC", addr, nvid, -1);
    
 }
 void affect_TI(char variable[4]){
-    int var_addr =  get_addr_pile(variable) ; // get_adresse_Tab(variable);
-    int tmp_addr = get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
-    pop(); //free_last_tmp_Tab();
+    int var_addr =  get_addr_pile(variable) ; 
+    int tmp_addr = get_addr_tmp_pile() ; 
+    pop(); 
     insert_TI("COP", var_addr, tmp_addr, -1);
 }
 
@@ -180,68 +222,65 @@ void affect_TI(char variable[4]){
 
 void var_TI(char variable[4], int profondeur){
     int var_addr = get_addr_pile(variable) ;
-    int addr = push_tmp(profondeur) - 1;// insert_tmp_Tab();
+    int addr = push_tmp(profondeur);
     //pop();
     insert_TI("COP", addr, var_addr, -1);
    
 }
 
-// FONCTION CONDITIONNELLE
 
 void condi_eq_TI(){
-    int addr = get_addr_tmp_pile() ; // get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
+    int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr-1;
-    pop(); //free_last_tmp_Tab();
+    pop(); 
     insert_TI("EQU", stl_addr, stl_addr, addr);
 }
 
 void condi_ne_TI(){
-    int addr = get_addr_tmp_pile() ; // get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
+    int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr-1;
-    pop(); //free_last_tmp_Tab();
+    pop(); 
     insert_TI("NE",stl_addr, stl_addr, addr);
 }
 
 void condi_gt_TI(){
-    int addr = get_addr_tmp_pile() ; // get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
+    int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr-1;
-    pop(); //free_last_tmp_Tab();
+    pop(); 
     insert_TI("GT",stl_addr, stl_addr, addr);
 }
 
 void condi_lt_TI(){
    
-    int addr = get_addr_tmp_pile() ; // get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
+    int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr-1;
-    pop(); //free_last_tmp_Tab();
+    pop(); 
     insert_TI("LT",stl_addr, stl_addr, addr);
 }
 
 void condi_ge_TI(){
-    int addr = get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
+    int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr-1;
-    pop(); //free_last_tmp_Tab();
+    pop(); 
     insert_TI("GE",stl_addr, stl_addr, addr);
 }
 
 void condi_le_TI(){
-    int addr = get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
+    int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr-1;
-    pop(); //free_last_tmp_Tab();
+    pop(); 
     insert_TI("LE",stl_addr, stl_addr, addr);
 }
-
-// DECLARATION
 
 void decla_var_TI(char variable[4] , int profondeur){
    // insert_Tab(variable);
  int addr = push(variable , profondeur);
- printf("ADDR : %d PUSH DECLA VAR : %s ",addr, variable );
+ //printf("ADDR : %d PUSH DECLA VAR : %s ",addr, variable );
     
 }
 
 void start_main( int la_profondeur){
-    int addr = push_addr_return(la_profondeur);
+    int addr = push_addr_return(la_profondeur)-1;
     insert_TI("PUSH",addr, -1, -1);
 } 
 
@@ -254,3 +293,9 @@ void jmf_body(){
  
 } 
 
+void jmp_body(){
+    int current = get_nbr_instrus_TI();
+    actu_jumf(pop_tjump(), current+2);
+    int line = insert_TI("JMP",-1,-1,-1);
+    insert_tjump(line);
+} 

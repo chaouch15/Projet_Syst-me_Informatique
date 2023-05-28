@@ -15,9 +15,14 @@ struct Element
     int addresse;
     Element *precedent;
 };
-
+#ifndef GLOBAL_H 
+#define GLOBAL_H 
+ 
+int addr; 
+ 
+#endif 
 int la_profondeur;
-int addr;
+
 int return_addr;
 struct Element *pile;
 void pile_init();
