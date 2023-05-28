@@ -7,6 +7,10 @@ void init_TF(){
     TF.nb_func = 0;
     TF.arg = 0;
 }
+void start_func() {
+    if (TF.nb_func == 0){
+    int line = insert_TI("JMP  ",-1,-1,-1);insert_tjump(line);} 
+} 
 
 int Add_Func(char id[20],  int first,    int last){
     Function f;

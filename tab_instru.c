@@ -9,9 +9,8 @@ table_instru TI;
 
 void init_TI(){
     printf("Instruction Table INITIALISATION \n");
-    int line = insert_TI("JMP  ",-1,-1,-1); 
-    insert_tjump(line); 
-    TI.nbr_instrus = 0;
+   
+    TI.nbr_instrus = -1;
    
 
 }
@@ -40,7 +39,7 @@ int get_nbr_instrus_TI(){
 
 // patch du JUMPF
 void actu_jumf(int from, int to){
-    TI.tab_instrus[from].addr1 = to;
+    TI.tab_instrus[from].addr1 = to ;
 }
 
 //patch du JUMP
@@ -65,7 +64,7 @@ int convert_instru (char instru[4] ){
         return 6;}
          else if  (strcmp(instru, "JMP" )== 0){
         return 7;}
-          else if  (strcmp(instru,"JMF" )== 0){
+          else if  (strcmp(instru,"JMF" )== 0){
         return 8;}
         else if  (strcmp(instru, "LT")== 0){
         return 9;}
@@ -99,7 +98,7 @@ void print_TI(){
         printf("%d\t  %s\t\t %d\t\t %d\t\t%d\t  %d\n", i, TI.tab_instrus[i].id, code , TI.tab_instrus[i].addr_dest, TI.tab_instrus[i].addr1, TI.tab_instrus[i].addr2);
     }
     
-    printf("----\n");
+   // printf("----\n");
 }
 
 //create a file with all the instru into it
@@ -135,7 +134,7 @@ void printf_TI(char variable[4]){
 // FONCTION ARITHMETIQUE
 
 void add_TI(){
-    int addr = get_addr_tmp_pile()+1 ; // get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
+    int addr = get_addr_tmp_pile(); // get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
     int stl_addr = addr -1;
     pop(); //free_last_tmp_Tab();
     insert_TI("ADD", stl_addr, stl_addr, addr);
@@ -164,14 +163,14 @@ void div_TI(){
 }
 
 void nb_TI(int nvid,int profondeur){
-    int addr = push_tmp(profondeur) ;
-     printf("gggggggggggg");
+    int addr = push_tmp(profondeur) - 1 ;
+   
      // insert_tmp_Tab();
     insert_TI("AFC", addr, nvid, -1);
    
 }
 void affect_TI(char variable[4]){
-    int var_addr =  get_addr_pile(variable) +1 ; // get_adresse_Tab(variable);
+    int var_addr =  get_addr_pile(variable) ; // get_adresse_Tab(variable);
     int tmp_addr = get_addr_tmp_pile() ; // get_last_tmp_addr_Tab();
     pop(); //free_last_tmp_Tab();
     insert_TI("COP", var_addr, tmp_addr, -1);
@@ -180,8 +179,9 @@ void affect_TI(char variable[4]){
 
 
 void var_TI(char variable[4], int profondeur){
-    int var_addr = get_addr_pile(variable);
-    int addr = push_tmp(profondeur) ;// insert_tmp_Tab();
+    int var_addr = get_addr_pile(variable) ;
+    int addr = push_tmp(profondeur) - 1;// insert_tmp_Tab();
+    //pop();
     insert_TI("COP", addr, var_addr, -1);
    
 }
@@ -235,7 +235,8 @@ void condi_le_TI(){
 
 void decla_var_TI(char variable[4] , int profondeur){
    // insert_Tab(variable);
-   push(variable , profondeur);
+ int addr = push(variable , profondeur);
+ printf("ADDR : %d PUSH DECLA VAR : %s ",addr, variable );
     
 }
 
@@ -245,5 +246,11 @@ void start_main( int la_profondeur){
 } 
 
 
-
+void jmf_body(){
+     int condition = get_addr_tmp_pile() ; 
+    pop(); 
+    int line = insert_TI("JMF",condition,-1,-1);
+    insert_tjump(line);
+ 
+} 
 

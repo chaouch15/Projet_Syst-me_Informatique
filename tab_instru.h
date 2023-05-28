@@ -41,3 +41,4 @@ void condi_le_TI();
 void start_main( int la_profondeur);
 void decla_var_TI(char variable[4] , int profondeur);
 void affect_TI(char variable[4]);
+void jmf_body();

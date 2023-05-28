@@ -120,7 +120,7 @@ int push(char* nvid, int profondeur ){
     nouvelle_pile -> profondeur = profondeur;
     nouvelle_pile->addresse= addr; 
     
-   printElement(nouvelle_pile);printf(" la bbbbbbb !!!%d\n", la_profondeur);
+   //printElement(nouvelle_pile);
     if (nouvelle_pile != NULL){
         nouvelle_pile->precedent = pile;
         pile = nouvelle_pile;
@@ -130,9 +130,9 @@ int push(char* nvid, int profondeur ){
     }
    
    
-   printf(" la profondeur !!!%d\n", la_profondeur);
-     
-    addr+=1;
+   //printf(" la profondeur !!!%d\n", la_profondeur);
+     print_stack();
+    addr ++;
     return (addr);
    }
 
@@ -144,7 +144,7 @@ int push(char* nvid, int profondeur ){
     nouvelle_pile -> profondeur = profondeur;
     nouvelle_pile->addresse= addr; 
     
-   printElement(nouvelle_pile);printf(" la bbbbbbb !!!%d\n", la_profondeur);
+   //printElement(nouvelle_pile);printf(" la bbbbbbb !!!%d\n", la_profondeur);
     if (nouvelle_pile != NULL){
         nouvelle_pile->precedent = pile;
         pile = nouvelle_pile;
@@ -154,9 +154,9 @@ int push(char* nvid, int profondeur ){
     }
    
    
-   printf(" la profondeur !!!%d\n", la_profondeur);
+   //printf(" la profondeur !!!%d\n", la_profondeur);
      
-   
+   print_stack();
     return (addr);
    }
 
@@ -168,7 +168,7 @@ int push_tmp(int profondeur) {
     nouvelle_pile -> tmp = true;
     nouvelle_pile -> profondeur = profondeur;
     nouvelle_pile->addresse= addr; 
-    printElement(nouvelle_pile);
+   // printElement(nouvelle_pile);
     if (nouvelle_pile != NULL){
         nouvelle_pile->precedent = pile;
         pile = nouvelle_pile;
@@ -176,12 +176,12 @@ int push_tmp(int profondeur) {
          nouvelle_pile->precedent = NULL;
         pile = nouvelle_pile;
     }
-    printf("begining push_tmp");
-    printf(" la profondeur %d\n", la_profondeur);
+   // printf("begining push_tmp");
+    //printf(" la profondeur %d\n", la_profondeur);
     
     addr+=1;
     
-   
+    print_stack();
     return (addr);
    }
 
@@ -216,20 +216,20 @@ Element* pop(){
             addr-=1;
         }
     }
+    print_stack();
     return result;
   
 }
 
-void afficherPile(){
+void print_stack(){
     if (pile == NULL)   {     exit(EXIT_FAILURE);   }
 
      Element *actuel = pile;
-
+     printf("ID               tmp             Pronfondeur                ADDRr\n");
     while (actuel  != NULL){
-        printf("ID = %s\n", actuel->id);
-        printf("tmp = %d\n", actuel->tmp);
-        printf("Pronfonduer = %d\n", actuel->profondeur);
-        printf("ADDR = %d\n", actuel->addresse);
+       
+        printf("%s                  %d                 %d                    %d\n", actuel->id, actuel->tmp, actuel->profondeur, actuel->addresse);
+         printf("--------------------------------------------------\n");
          
          actuel = actuel->precedent;
         
@@ -242,7 +242,7 @@ void afficherPile(){
 }
 
 void save_addr_return () {
-     printf("I am saving return addr");
+    // printf("I am saving return addr");
     return_addr = addr; 
 
 }

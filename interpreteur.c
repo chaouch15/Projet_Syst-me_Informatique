@@ -45,7 +45,7 @@ void interpreteuree(){
     read_file();
     int index_code = 0;
 
-    printf("je commence à interpréter");
+    printf("je commence à interpréter \n");
    // int tab_int[100];
   //  int index_code = 0;
    // char inst[4];
@@ -68,16 +68,19 @@ void interpreteuree(){
                break;
            case 5:
                TI_reg[TI_code[index_code][1]] = TI_reg[TI_code[index_code][2] ] ;
+              // TI_reg[TI_code[index_code][2] ] = 0;
                break;
            case 6:
+           printf ("I AFFECT %d",TI_code[index_code][2]);
            TI_reg[TI_code[index_code][1]] = TI_code[index_code][2]  ;
                break;
            case 7:
            index_code =  TI_reg[TI_code[index_code][1]]  ;
                break;
            case 8:
-               if(TI_code[index_code][0]){
-                index_code = TI_code[index_code][1]; }
+           printf("''''''%d",TI_code[index_code][2]);
+               if(TI_reg[TI_code[index_code][1]] == 0 ){
+                index_code = TI_code[index_code][2]- 1 ; }
                break;
            case 9:
            if(TI_code[index_code][2] <TI_code[index_code][3]  ){
@@ -97,13 +100,13 @@ void interpreteuree(){
 
         }
         
-        printf("-----%d-----%d \n",index_code,TI_code[index_code][0]);
-        index_code++;}
+      //  printf("-----%d-----%d \n",index_code,TI_code[index_code][0]);
+        index_code++;
 
     int i ;
           for(i=0; i<10; i++){
             printf("REG %d : %d  \n", i, TI_reg[i]);
         
-         }
+         }}
         printf("finished");}
   

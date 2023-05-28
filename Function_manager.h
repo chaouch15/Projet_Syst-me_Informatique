@@ -22,3 +22,4 @@ int get_first(char id[20]);
 int get_last(char id[20]);
 int get_addr_arg();
 void RST_arg();
+void start_func();

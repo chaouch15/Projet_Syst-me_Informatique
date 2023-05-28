@@ -10,7 +10,7 @@
 /*Definitions*/
 NUMBERS		 ([0-9]*)|0x[0-9a-fA-F]+|[0-9]*[eE][0-9]* 
 WORDS        [a-zA-Z]([a-zA-Z0-9]|_)*
-COMMENT      "//".*\n|"/*"(.|\n)*"*/"
+COMMENT     "/*"([^*]|[*]+[^*/])*"*/"
 ENDLINE      [ ]*\n
 
 
