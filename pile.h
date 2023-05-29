@@ -40,7 +40,9 @@ int push_tmp(int profondeur) ;
 void save_addr_return ();
 int push_addr_return(int la_profondeur);
 int get_addr_return();
-
-
-
+int push_call_addr_func( char * id,int profondeur );
+int push_call_retVal_func( char * id,  int profondeur );
+void print_stack();
+void flush_stack();
+Element* pop_end_call();
 //#endif

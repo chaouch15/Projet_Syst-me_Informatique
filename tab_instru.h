@@ -1,7 +1,7 @@
 #define SIZE_TAB 100
 
 typedef struct {
-    char id[4];
+    int id;
     int addr_dest; 
     int addr1;
     int addr2;
@@ -13,12 +13,13 @@ typedef struct {
     int nbr_instrus;
 } table_instru;
 
-
+void ret_inst();
+void call_inst(char id);
 char* strip_string(char instru[100]);
-int code_instru(char instru[4]);
+const char* convert_instru (int code );
 void init_TI();
 table_instru get_Tab_instrus();
-int insert_TI(char inst[4], int addr_dest, int addr1, int addr2);
+int insert_TI(int inst, int addr_dest, int addr1, int addr2);
 void delete_TI();
 int get_nbr_instrus_TI();
 void actu_jumf(int from, int to);
@@ -43,5 +44,11 @@ void decla_var_TI(char variable[4] , int profondeur);
 void affect_TI(char variable[4]);
 void jmf_body();
 void jmp_body();
-
+void pop_return_addr();
+void end_nop();
 char *strstrip(char *s);
+void push_return_addr_func();
+void push_return_val_func(char * func);
+void push_return_addr();
+void push_ret_addr_inst();
+void recup_return_func();

@@ -1,44 +1,83 @@
-  strcpy(inst,TI.tab_instrus[instruction].inst);
-        if (strcmp(inst, "ADD") == 0) tab_int[TI.tab_instrus[instruction].addr_dest] = tab_int[TI.tab_instrus[instruction].addr1] + tab_int[TI.tab_instrus[instruction].addr2];
+void appel_function(){
+    int offset =  TI_code[index_code][1] ;
+     
+    while(TI_code[index_code][0] != 19){
 
-        else if (strcmp(inst, "SUB") == 0) tab_int[TI.tab_instrus[instruction].addr_dest] = tab_int[TI.tab_instrus[instruction].addr1] - tab_int[TI.tab_instrus[instruction].addr2];
-
-        else if (strcmp(inst, "MUL") == 0) tab_int[TI.tab_instrus[instruction].addr_dest] = tab_int[TI.tab_instrus[instruction].addr1] * tab_int[TI.tab_instrus[instruction].addr2];
-
-        else if (strcmp(inst, "DIV") == 0) tab_int[TI.tab_instrus[instruction].addr_dest] = tab_int[TI.tab_instrus[instruction].addr1] / tab_int[TI.tab_instrus[instruction].addr2];
+     printf (" INSTRU :  %d LIGNE : %d\n",TI_code[index_code][0], index_code);
         
-        else if (strcmp(inst, "AFC") == 0) tab_int[TI.tab_instrus[instruction].addr_dest] = TI.tab_instrus[instruction].addr1;
+        switch (TI_code[index_code][0]) {
+           case 1:
+           printf("%d + %d = %d",TI_reg[TI_code[index_code][3] + offset] ,TI_reg[TI_code[index_code][2] + offset] ,TI_reg[TI_code[index_code][1] + offset]  );
+             TI_reg[TI_code[index_code][1] + offset] = TI_reg[TI_code[index_code][2] + offset] + TI_reg[TI_code[index_code][3] + offset ]  ;
+               break;
+           case 2:
+              TI_reg[TI_code[index_code][1] + offset] =TI_reg[TI_code[index_code][2] + offset] * TI_reg[TI_code[index_code][3] + offset ]  ;
 
-        else if (strcmp(inst, "COP") == 0) tab_int[TI.tab_instrus[instruction].addr_dest] = tab_int[TI.tab_instrus[instruction].addr1];
-
-        else if (strcmp(inst, "EQU") == 0) tab_int[TI.tab_instrus[instruction].addr_dest] = tab_int[TI.tab_instrus[instruction].addr1] == tab_int[TI.tab_instrus[instruction].addr2];
+               break;
+           case 3:
+              TI_reg[TI_code[index_code][1] + offset] = TI_reg[TI_code[index_code][2] + offset] - TI_reg[TI_code[index_code][3] + offset ]  ;
+               break;
+           case 4:
+               TI_reg[TI_code[index_code][1] + offset] = TI_reg[TI_code[index_code][2] + offset] / TI_reg[TI_code[index_code][3] + offset ]  ;
+               break;
+           case 5:
+               TI_reg[TI_code[index_code][1] + offset] = TI_reg[TI_code[index_code][2] + offset ] ;
+              // TI_reg[TI_code[index_code][2] + offset ] = 0;
+               break;
+           case 6:
+           
+           TI_reg[TI_code[index_code][1] + offset] = TI_code[index_code][2] + offset  ;
+               break;
+           case 7:
+           printf (" JMP %d",TI_code[index_code][1] + offset);
+           index_code =  TI_code[index_code][1] + offset -1;
+          //  printf (" index code %d",index_code);
+               break;
+           case 8:
         
-        else if (strcmp(inst, "NE") == 0) tab_int[TI.tab_instrus[instruction].addr_dest] = tab_int[TI.tab_instrus[instruction].addr1] != tab_int[TI.tab_instrus[instruction].addr2];
+               if(TI_reg[TI_code[index_code][1] + offset] == 0 ){
+                index_code = TI_code[index_code][2] + offset- 1 ; }
+               break;
+           case 9:
+           if(TI_code[index_code][2] + offset <TI_code[index_code][3] + offset  ){
+                TI_reg[TI_code[index_code][1] + offset] = 1 ;} else{TI_reg[TI_code[index_code][1] + offset] =0;} 
+             break;
+           case 10:
+            if(TI_code[index_code][2] + offset >TI_code[index_code][3] + offset  ){
+                TI_reg[TI_code[index_code][1] + offset] = 1 ;} else{TI_reg[TI_code[index_code][1] + offset] =0;} 
+             break;
+           case 11:
+            if(TI_code[index_code][2] + offset == TI_code[index_code][3] + offset  ){
+                TI_reg[TI_code[index_code][1] + offset] = 1 ;} else{TI_reg[TI_code[index_code][1] + offset] =0;} 
+             break;
+           case 12:
+                printf("%d\n",TI_reg[TI_code[index_code][1] + offset]) ;
+                break;
+            case 13:
             
-        else if (strcmp(inst, "GT") == 0) tab_int[TI.tab_instrus[instruction].addr_dest] = tab_int[TI.tab_instrus[instruction].addr1] > tab_int[TI.tab_instrus[instruction].addr2];
-        
-        else if (strcmp(inst, "LT") == 0) tab_int[TI.tab_instrus[instruction].addr_dest] = tab_int[TI.tab_instrus[instruction].addr1] < tab_int[TI.tab_instrus[instruction].addr2];
+                TI_reg[TI_code[index_code][1] + offset] = index_code+2 ;
+            break;
+            case 14:
+            //    index_code =  TI_reg[TI_code[index_code][1] + offset] ;
+            break;
+             case 15:
+               index_code =  TI_code[index_code][1] + offset - 1 ;
+               appel_function();
+            break;
             
-        else if (strcmp(inst, "GE") == 0) tab_int[TI.tab_instrus[instruction].addr_dest] = tab_int[TI.tab_instrus[instruction].addr1] >= tab_int[TI.tab_instrus[instruction].addr2];
-        
-        else if (strcmp(inst, "LE") == 0) tab_int[TI.tab_instrus[instruction].addr_dest] = tab_int[TI.tab_instrus[instruction].addr1] <= tab_int[TI.tab_instrus[instruction].addr2];
-        
-        else if (strcmp(inst, "JMPF") == 0){
-            if (!tab_int[TI.tab_instrus[instruction].addr_dest]){
-                instruction = TI.tab_instrus[instruction].addr1 - 1;
-                instruction--;
-            }
         }
+           
 
-        else if (strcmp(inst, "JMP") == 0){
-            instruction = TI.tab_instrus[instruction].addr_dest - 1;
-            instruction--;
-        }
+      //  printf("-----%d-----%d \n",index_code,TI_code[index_code][0]);
+        index_code= index_code+1;
 
-        else if (strcmp(inst, "PRI") == 0){
-            printf("%d\n", tab_int[TI.tab_instrus[instruction].addr_dest]);
-        }
-        instruction++;
-    }
-}
+       // printf("finished %d",index_code);}
+   
+         for(int i=0; i<10; i++){
+            printf("REG %d : %d  \n", i, TI_reg[i]);
+          
+         } }
+
+          index_code = offset ;
+} 
 

@@ -10,7 +10,8 @@
 int TI_reg[1024];
 int TI_code[1024][4];
 int size=0;
-index_code=0;
+int index_code=0;
+int offset = 0 ;
 
 void read_file(){
     FILE *file;
@@ -53,9 +54,7 @@ void interpreteuree(){
 //for (int i = 0; i < 9; i++){
  //printf("'''''''''''%d %d ",i,TI_code[i][1] );}
     while(TI_code[index_code][0] != 0){
-
-    int i ;
-        
+     printf (" INSTRU :  %d LIGNE : %d\n",TI_code[index_code][0], index_code);
         switch (TI_code[index_code][0]) {
            case 1:
            printf("%d + %d = %d",TI_reg[TI_code[index_code][3]] ,TI_reg[TI_code[index_code][2]] ,TI_reg[TI_code[index_code][1]]  );
@@ -80,12 +79,12 @@ void interpreteuree(){
            TI_reg[TI_code[index_code][1]] = TI_code[index_code][2]  ;
                break;
            case 7:
-          // printf (" JMP %d",TI_code[index_code][1]);
-           index_code =  TI_code[index_code][1]-1 ;
+           printf (" JMP %d",TI_code[index_code][1]);
+           index_code =  TI_code[index_code][1] -1;
           //  printf (" index code %d",index_code);
                break;
            case 8:
-        
+
                if(TI_reg[TI_code[index_code][1]] == 0 ){
                 index_code = TI_code[index_code][2]- 1 ; }
                break;
@@ -105,24 +104,114 @@ void interpreteuree(){
                 printf("%d\n",TI_reg[TI_code[index_code][1]]) ;
                 break;
             case 13:
-                TI_reg[TI_code[index_code][1]] = index_code ;
+                TI_reg[TI_code[index_code][1]] = index_code + 3 ;
+                offset = TI_code[index_code][1];
+                  printf("OFFSET %d ",offset);
             break;
             case 14:
-               // index_code =  TI_reg[TI_code[index_code][1]] ;
+            //   index_code =  TI_reg[TI_code[index_code][1]] ;
             break;
              case 15:
-               // index_code =  TI_code[index_code][1] ;
+              // index_code =  TI_code[index_code][1] - 1 ;
+             //  printf("OFFSET %d ",TI_code[index_code][1] );
+             appel_function();
             break;
+          //  case 19:
+             //   index_code =  TI_code[index_code][1] ;
+
         }
         
       //  printf("-----%d-----%d \n",index_code,TI_code[index_code][0]);
         index_code= index_code+1;
 
        // printf("finished %d",index_code);}
-       }
-       int i;
-         for(i=0; i<10; i++){
+   
+         for(int i=0; i<10; i++){
             printf("REG %d : %d  \n", i, TI_reg[i]);
           
-         }
+         } }
 } 
+
+void appel_function(){
+   
+    index_code = TI_code[index_code][1] ;
+    printf("OFFSET %d ", offset);
+    while(TI_code[index_code][0] != 19){
+
+     printf (" INSTRU :  %d LIGNE : %d\n",TI_code[index_code][0], index_code);
+        
+        switch (TI_code[index_code][0]) {
+           case 1:
+           printf("%d + %d = %d",TI_reg[TI_code[index_code][3] + offset] ,TI_reg[TI_code[index_code][2] + offset] ,TI_reg[TI_code[index_code][1] + offset]  );
+             TI_reg[TI_code[index_code][1] + offset] = TI_reg[TI_code[index_code][2] + offset] + TI_reg[TI_code[index_code][3] + offset ]  ;
+               break;
+           case 2:
+              TI_reg[TI_code[index_code][1] + offset] =TI_reg[TI_code[index_code][2] + offset] * TI_reg[TI_code[index_code][3] + offset ]  ;
+
+               break;
+           case 3:
+              TI_reg[TI_code[index_code][1] + offset] = TI_reg[TI_code[index_code][2] + offset] - TI_reg[TI_code[index_code][3] + offset ]  ;
+               break;
+           case 4:
+               TI_reg[TI_code[index_code][1] + offset] = TI_reg[TI_code[index_code][2] + offset] / TI_reg[TI_code[index_code][3] + offset ]  ;
+               break;
+           case 5:
+               TI_reg[TI_code[index_code][1] + offset] = TI_reg[TI_code[index_code][2] + offset ] ;
+              // TI_reg[TI_code[index_code][2] + offset ] = 0;
+               break;
+           case 6:
+           
+           TI_reg[TI_code[index_code][1] + offset] = TI_code[index_code][2]  ;
+               break;
+           case 7:
+           printf (" JMP %d",TI_code[index_code][1] + offset);
+           index_code =  TI_code[index_code][1] + offset -1;
+          //  printf (" index code %d",index_code);
+               break;
+           case 8:
+        
+               if(TI_reg[TI_code[index_code][1] + offset] == 0 ){
+                index_code = TI_code[index_code][2] + offset- 1 ; }
+               break;
+           case 9:
+           if(TI_code[index_code][2] + offset <TI_code[index_code][3] + offset  ){
+                TI_reg[TI_code[index_code][1] + offset] = 1 ;} else{TI_reg[TI_code[index_code][1] + offset] =0;} 
+             break;
+           case 10:
+            if(TI_code[index_code][2] + offset >TI_code[index_code][3] + offset  ){
+                TI_reg[TI_code[index_code][1] + offset] = 1 ;} else{TI_reg[TI_code[index_code][1] + offset] =0;} 
+             break;
+           case 11:
+            if(TI_code[index_code][2] + offset == TI_code[index_code][3] + offset  ){
+                TI_reg[TI_code[index_code][1] + offset] = 1 ;} else{TI_reg[TI_code[index_code][1] + offset] =0;} 
+             break;
+           case 12:
+                printf("%d\n",TI_reg[TI_code[index_code][1] + offset]) ;
+                break;
+            case 13:
+            
+                TI_reg[TI_code[index_code][1] + offset] = index_code+2 ;
+            break;
+            case 14:
+                index_code =  TI_reg[TI_code[index_code][1] + offset] ;
+            break;
+            case 15:
+               index_code =  TI_reg[TI_code[index_code][1]] ;
+            break;
+             
+        }
+           
+
+      //  printf("-----%d-----%d \n",index_code,TI_code[index_code][0]);
+        index_code= index_code+1;
+
+       // printf("finished %d",index_code);}
+   
+         for(int i=0; i<10; i++){
+            printf("REG %d : %d  \n", i, TI_reg[i]);
+          
+         } }
+
+          index_code = TI_reg[offset] -2;
+} 
+

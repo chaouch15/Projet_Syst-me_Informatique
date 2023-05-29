@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
+#include "Jump_manager.h"
 #include "tab_instru.h"
 #include "pile.h"
 
@@ -21,9 +22,10 @@ table_instru get_Tab_instrus(){
     return TI;
 }
 
-int insert_TI(char id[4], int addr_dest, int addr1, int addr2){
+int insert_TI(int id, int addr_dest, int addr1, int addr2){
     TI.nbr_instrus++;
-    strcpy(TI.tab_instrus[TI.nbr_instrus].id,id);
+    TI.tab_instrus[TI.nbr_instrus].id = id;
+   // printf("zzzzzzzzzzzz%d" , TI.tab_instrus[TI.nbr_instrus].id);
     TI.tab_instrus[TI.nbr_instrus].addr_dest = addr_dest;
     TI.tab_instrus[TI.nbr_instrus].addr1 = addr1;
     TI.tab_instrus[TI.nbr_instrus].addr2 = addr2;
@@ -49,41 +51,73 @@ void actu_jump(int from, int to){
     TI.tab_instrus[from].addr_dest = to - 1;
 }
 
-int convert_instru (char instru[4] ){
-     if  (strcmp(instru,"NOP" )== 0){
-        return 0;}
-     else if (strcmp(instru, "ADD")==0){
-        return 1;
-        }else if (strcmp(instru, "MUL" ) == 0){
-        return 2;
-         }else if (strcmp(instru, "SUB" )== 0){
-        return 3; 
-        }else if (strcmp(instru, "DIV" )== 0){
-        return 4;}
-         else if  (strcmp(instru, "COP" )== 0){
-        return 5;}
-         else if  (strcmp(instru, "AFC" )== 0){
-        return 6;}
-         else if  (strcmp(instru, "JMP " )== 0){
-        return 7;}
-          else if  (strcmp(instru,"JMF" )== 0){
-        return 8;}
-        else if  (strcmp(instru, "LT")== 0){
-        return 9;}
-        else if  (strcmp(instru, "GT" )== 0){
-        return 10;}
-        else if  (strcmp(instru, "EQU")== 0){
-        return 11;}
-        else if  (strcmp(instru, "PRI" )== 0){
-        return 12;} 
-         else if  (strcmp(instru, "PUSH" )== 0){
-        return 13;} 
-         else if  (strcmp(instru, "POP" )== 0){
-        return 14;} 
-         else if  (strcmp(instru, "CALL" )== 0){
-        return 15;} 
-        else return -1;
-    
+const char* convert_instru (int code ){
+   // printf("CODE ------%d \n",code);
+
+           
+        switch (code) {
+            case 0 : 
+            return "NOP";
+            break;
+           case 1:
+            return "ADD";
+               break;
+           case 2:
+            return "MUL";
+               break;
+           case 3:
+              return "SUB";
+              break;
+           case 4:
+              return "DIV";
+              break;
+           case 5:
+             return  "COP";
+             break;
+           case 6:
+            return  "AFC";
+            break;
+           case 7:
+            return "JMP";
+               break;
+           case 8:
+        return "JMF";
+               break;
+           case 9:
+           return "LT";
+             break;
+           case 10:
+           return "GT";
+             break;
+           case 11:
+           return   "EQ";
+             break;
+           case 12:
+            return "PRI";
+                break;
+            case 13:
+                return  "PUSH";
+            break;
+            case 14:
+             return "POP";
+            break;
+             case 15:
+              return "CALL";
+            break;
+            case 16:
+            return "NE";
+            break;
+            case 17:
+            return "GE";
+            break;
+            case 18:
+            return "LE";
+            break;
+             case 19:
+            return "RET";
+            break;
+        }
+        return "ERROR";
      
     
 }
@@ -132,13 +166,15 @@ char * strip_string(char str[100]){
 //print the table of instru
 void print_TI(){
     printf("------------------------ASM INSTRUCTIONS ------------------------------\n");
-    printf("LIGNE    OPERATION     CODE   ADDRESS DEST   ADDRESS 1   ADDRESS 2\n");
-    int i;
-    int code ;
-    for(i=0; i<TI.nbr_instrus+1; i++){
-                code = convert_instru(TI.tab_instrus[i].id);
-
-        printf("%d\t  %s\t\t %d\t\t %d\t\t%d\t  %d\n", i, TI.tab_instrus[i].id, code , TI.tab_instrus[i].addr_dest, TI.tab_instrus[i].addr1, TI.tab_instrus[i].addr2);
+   printf("LIGNE    OPERATION     CODE       ADDRESS DEST     ADDRESS 1     ADDRESS 2\n");
+   
+   // char code ;
+    
+    for(int i=0; i<TI.nbr_instrus+1; i++){
+           
+           const char* op = convert_instru(TI.tab_instrus[i].id);
+ // printf("------------op = %s -------------",op);
+        printf("%d\t  %s\t\t  %d\t\t %d\t\t%d\t  %d\n", i, op,TI.tab_instrus[i].id, TI.tab_instrus[i].addr_dest, TI.tab_instrus[i].addr1, TI.tab_instrus[i].addr2);
     }
     
    // printf("----\n");
@@ -146,21 +182,19 @@ void print_TI(){
 
 //create a file with all the instru into it
 void create_file_TI(){    
-    int code;
+   // int code;
     FILE *file;
-    file = fopen("instru.txt", "rt");
+    file = fopen("instru.txt", "w");
     int i;
     for (i = 0; i < TI.nbr_instrus+1; i++){
-       char * re = TI.tab_instrus[i].id;
+       //char * re = TI.tab_instrus[i].id;
      //  fprintf(file, "%s ", re);
      //re = strip_string(TI.tab_instrus[i].id);
-   //  printf("-----------------%s",re);
-        // code = convert_instru(code);
-         code = convert_instru(TI.tab_instrus[i].id);
-          fprintf(file, "%d ",code);
-        /*if(TI.tab_instrus[i].addr_dest != -1) */fprintf(file, "%d ",TI.tab_instrus[i].addr_dest); 
-      /*  if(TI.tab_instrus[i].addr1 != -1)*/ fprintf(file, "%d ",TI.tab_instrus[i].addr1);
-       /* if(TI.tab_instrus[i].addr2 != -1) */fprintf(file, "%d ",TI.tab_instrus[i].addr2);
+        printf("-------CODE----------%d",TI.tab_instrus[i].id);
+        fprintf(file, "%d ",TI.tab_instrus[i].id);
+        fprintf(file, "%d ",TI.tab_instrus[i].addr_dest); 
+        fprintf(file, "%d ",TI.tab_instrus[i].addr1);
+        fprintf(file, "%d ",TI.tab_instrus[i].addr2);
         fprintf(file,"\n");
     }
    
@@ -171,7 +205,7 @@ void create_file_TI(){
 
 void printf_TI(char variable[4]){
     int addr = get_addr_pile(variable) ; 
-    insert_TI("PRI", addr, -1, -1);
+    insert_TI(12, addr, -1, -1);
 
    
 }
@@ -181,7 +215,7 @@ void add_TI(){
     int addr = get_addr_tmp_pile(); 
     int stl_addr = addr -1;
     pop(); 
-    insert_TI("ADD", stl_addr, stl_addr, addr);
+    insert_TI(1, stl_addr, stl_addr, addr);
 }
 
 void sub_TI(){
@@ -189,42 +223,42 @@ void sub_TI(){
     int stl_addr = addr-1;
     pop(); 
    
-    insert_TI("SUB", stl_addr, stl_addr, addr);
+    insert_TI(3, stl_addr, stl_addr, addr);
 }
 
 void mul_TI(){
     int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr-1 ;
     pop(); 
-    insert_TI("MUL", stl_addr, stl_addr, addr);
+    insert_TI(2, stl_addr, stl_addr, addr);
 }
 
 void div_TI(){
     int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr - 1;
     pop(); 
-    insert_TI("DIV", stl_addr, stl_addr, addr);
+    insert_TI(4, stl_addr, stl_addr, addr);
 }
 
 void nb_TI(int nvid,int profondeur){
-    int addr = push_tmp(profondeur) - 1 ;
-    insert_TI("AFC", addr, nvid, -1);
+    int addr = push_tmp(profondeur) -1 ;
+    insert_TI(6, addr, nvid, -1);
    
 }
 void affect_TI(char variable[4]){
     int var_addr =  get_addr_pile(variable) ; 
     int tmp_addr = get_addr_tmp_pile() ; 
     pop(); 
-    insert_TI("COP", var_addr, tmp_addr, -1);
+    insert_TI(5, var_addr, tmp_addr, -1);
 }
 
 
 
 void var_TI(char variable[4], int profondeur){
     int var_addr = get_addr_pile(variable) ;
-    int addr = push_tmp(profondeur);
+    int addr = push_tmp(profondeur)-1;
     //pop();
-    insert_TI("COP", addr, var_addr, -1);
+    insert_TI(5, addr, var_addr, -1);
    
 }
 
@@ -233,21 +267,21 @@ void condi_eq_TI(){
     int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr-1;
     pop(); 
-    insert_TI("EQU", stl_addr, stl_addr, addr);
+    insert_TI(11, stl_addr, stl_addr, addr);
 }
 
 void condi_ne_TI(){
     int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr-1;
     pop(); 
-    insert_TI("NE",stl_addr, stl_addr, addr);
+    insert_TI(16,stl_addr, stl_addr, addr);
 }
 
 void condi_gt_TI(){
     int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr-1;
     pop(); 
-    insert_TI("GT",stl_addr, stl_addr, addr);
+    insert_TI(10,stl_addr, stl_addr, addr);
 }
 
 void condi_lt_TI(){
@@ -255,21 +289,21 @@ void condi_lt_TI(){
     int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr-1;
     pop(); 
-    insert_TI("LT",stl_addr, stl_addr, addr);
+    insert_TI(9,stl_addr, stl_addr, addr);
 }
 
 void condi_ge_TI(){
     int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr-1;
     pop(); 
-    insert_TI("GE",stl_addr, stl_addr, addr);
+    insert_TI(17,stl_addr, stl_addr, addr);
 }
 
 void condi_le_TI(){
     int addr = get_addr_tmp_pile() ; 
     int stl_addr = addr-1;
     pop(); 
-    insert_TI("LE",stl_addr, stl_addr, addr);
+    insert_TI(18,stl_addr, stl_addr, addr);
 }
 
 void decla_var_TI(char variable[4] , int profondeur){
@@ -281,14 +315,15 @@ void decla_var_TI(char variable[4] , int profondeur){
 
 void start_main( int la_profondeur){
     int addr = push_addr_return(la_profondeur)-1;
-    insert_TI("PUSH",addr, -1, -1);
+    push("retVal", la_profondeur);
+    insert_TI(13,addr, -1, -1);
 } 
 
 
 void jmf_body(){
      int condition = get_addr_tmp_pile() ; 
     pop(); 
-    int line = insert_TI("JMF",condition,-1,-1);
+    int line = insert_TI(8,condition,-1,-1);
     insert_tjump(line);
  
 } 
@@ -296,6 +331,51 @@ void jmf_body(){
 void jmp_body(){
     int current = get_nbr_instrus_TI();
     actu_jumf(pop_tjump(), current+2);
-    int line = insert_TI("JMP",-1,-1,-1);
+    int line = insert_TI(7,-1,-1,-1);
     insert_tjump(line);
 } 
+
+void pop_return_addr(){
+    insert_TI(14,search("retinst"),-1,-1);}
+
+void push_return_addr(){
+    insert_TI(13,search("retinst"),-1,-1);}
+
+void pop_return_val(){
+    insert_TI(14,search("retVal")-1,-1,-1);}
+
+void push_return_val(){
+    insert_TI(13,search("retVal")-1,-1,-1);}
+
+void end_nop(){
+    insert_TI(0,0,0,0);
+}
+void ret_inst(){
+    insert_TI(19,0,0,0);
+}
+void call_inst(char id){
+    insert_TI(15,id,-1,-1);
+}
+void push_return_addr_func(){
+    push("FuncAddr", la_profondeur);}
+
+void push_return_val_func(char * func){
+       push(func, la_profondeur);}
+
+void push_ret_addr_inst(){
+    int retaddr = push_call_addr_func("retinst" ,la_profondeur);
+    push_call_retVal_func("retvalinst",la_profondeur);
+   // push_return_addr(retaddr);
+}
+
+void recup_return_func(){
+   
+   insert_TI(5,search("retinst"),search("retVal"),-1);  
+  pop();  pop_end_call();    
+    pop_end_call();
+    
+    push_tmp(la_profondeur);
+
+}
+
+// push a laddr ou je suis le nb instruction ou je suis et pop le meme 

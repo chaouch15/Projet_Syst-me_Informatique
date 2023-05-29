@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include "pile.h"
 #include "tab_instru.h"
-#include "Jump_manager.h"
 #include "interpreteur.h"
 #include "Function_manager.h"
 #include "cross_compiler.h"
+#include "Jump_manager.h"
 
 int yylex (void);
 void yyerror (const char *);
@@ -46,17 +46,17 @@ Statement : Statement Main
 		;
 
 Fonction : 
-            tINT tID  incr_prof { start_func();decla_var_TI($<c>2, la_profondeur); printf("Function done\n"); } Declaration tLBRACE   Body  Return {affect_TI ($<c>2);insert_TI("RET",0,0,0);}tSEMI tRBRACE { Add_Func($2,  search($<c>2), get_nbr_instrus_TI());}
-         | tVOID tID{start_func(); $<num>1 = get_nbr_instrus_TI() + 1;} Declaration tLBRACE  Body  tRBRACE{Add_Func($2, $1, get_nbr_instrus_TI());}    
+            tINT tID  incr_prof { start_func(); push_return_addr_func();push_return_val_func($<c>2); printf("Function done\n"); } Declaration tLBRACE   Body  Return {affect_TI ($<c>2);}tSEMI tRBRACE { Add_Func($2,  search($<c>2), get_nbr_instrus_TI());ret_inst();flush_stack();}
+         | tVOID tID incr_prof {start_func();push_return_addr_func();push_return_val_func($<c>2);  $<num>1 = get_nbr_instrus_TI() + 1;} Declaration tLBRACE  Body  tRBRACE{Add_Func($2, $1, get_nbr_instrus_TI());ret_inst();flush_stack();}    
        ;
         
 Declaration:
      tLPAR Args tRPAR 
 ;
 Main : 
-        tINT tMain { actu_jump(pop_tjump(), get_nbr_instrus_TI()+2); } tLPAR tRPAR tLBRACE Body Return tSEMI tRBRACE {insert_TI("RET",0,0,0);}
-    | tVOID  {printf("START MAIN\n");}tMain {actu_jump(pop_tjump(), get_nbr_instrus_TI()+2);  } incr_prof tLPAR tRPAR tLBRACE Body tRBRACE {insert_TI("NOP",0,0,0);}
-    | tMain { actu_jump(pop_tjump(), get_nbr_instrus_TI()+2);  } tLPAR tRPAR tLBRACE Body tRBRACE {insert_TI("NOP",0,0,0);}
+        tINT tMain incr_prof {push_return_addr_func();push_return_val_func($<c>2);  actu_jump(pop_tjump(), get_nbr_instrus_TI()+2); } tLPAR tRPAR tLBRACE Body Return tSEMI tRBRACE {ret_inst(); end_nop(); flush_stack(); }
+    | tVOID  incr_prof {push_return_addr_func();push_return_val_func("void"); printf("START MAIN\n");}tMain {actu_jump(pop_tjump(), get_nbr_instrus_TI()+2);  }  tLPAR tRPAR tLBRACE Body tRBRACE {ret_inst();end_nop(); flush_stack(); }
+    | tMain incr_prof { push_return_addr_func();push_return_val_func($<c>1); actu_jump(pop_tjump(), get_nbr_instrus_TI()+2);  } tLPAR tRPAR tLBRACE Body tRBRACE { ret_inst();end_nop();flush_stack(); }
     ;
 
 
@@ -82,9 +82,8 @@ BodyDec :
 BodyInstru :
       Printf BodyInstru 
     | Affect tSEMI             
-    | incr_prof While  decr_prof
-    | incr_prof  If   decr_prof
-  
+    | incr_prof While  {flush_stack();}
+    | incr_prof  If   {flush_stack();}
    
      ;
 
@@ -101,11 +100,11 @@ Initialisationc :
 
 Call:
 
-    tID tLPAR  {push_addr_return(la_profondeur);}Parametre tRPAR {insert_TI("PUSH",search("returnADDR")-1,-1,-1);insert_TI("CALL",search($<c>1),-1,-1); insert_TI("POP",search("returnADDR")-1,-1,-1);} 
+    tID tLPAR incr_prof {push_ret_addr_inst();} Parametre tRPAR {push_return_addr();call_inst(get_first($<c>1)); pop_return_addr(); recup_return_func();} 
    ;
 Initialisation : 
 
-     tID   tASSIGN {save_addr_return();  decla_var_TI($<c>1, la_profondeur); } Call  {affect_TI ($1); }
+     tID   tASSIGN {save_addr_return();  decla_var_TI($<c>1, la_profondeur); } Call  {affect_TI ($1); flush_stack();}
      | tID tASSIGN { decla_var_TI($<c>1, la_profondeur);} Val  {affect_TI ($1); }
     | Initialisation tCOMMA Initialisation  
     |  tID  {decla_var_TI($<c>1, la_profondeur);} 

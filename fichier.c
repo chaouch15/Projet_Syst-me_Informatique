@@ -33,7 +33,7 @@ if (a) {
     int c = 9;
   }
 }
-}*/ 
+}*/
 
 int f(int a) {
   return a + 2;
